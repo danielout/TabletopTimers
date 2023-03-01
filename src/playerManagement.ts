@@ -1,14 +1,21 @@
-import { CountUp } from "./timers";
+import { Timer } from "easytimer.js";
 
 
 export class Player {
+    id: number;
     name: string;
-    actionTimer: CountUp;
-    extraTimer: CountUp;
+    actionTimer: Timer;
+    extraTimer: Timer;
+    reminderFlag: "none" | "mild" | "severe" = "none";
 
-    constructor(name: string) {
+    constructor(id: number, name: string) {
+        this.id = id;
         this.name = name;
-        this.actionTimer = new CountUp();
-        this.extraTimer = new CountUp();
+        this.actionTimer = new Timer();
+        this.extraTimer = new Timer();
+
+        this.actionTimer.start();
+        this.extraTimer.start();
     }
 }
+

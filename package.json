@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@mdi/font": "7.0.96",
+    "easytimer.js": "^4.5.4",
     "prettier": "^2.8.4",
     "roboto-fontface": "*",
     "vue": "^3.2.38",
