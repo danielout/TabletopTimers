@@ -60,7 +60,7 @@ function writeSetting<cat extends keyof SettingsManager>(category: cat, setting:
                         <v-btn value="dark" @click="writeSetting('theming', 'themeType', 'dark')" class="w-33">Dark</v-btn>
                     </v-btn-toggle>
                     <v-select disabled class="mt-1 mb-1" persistent-hint density="compact" hint="Theme used for dark mode"
-                        label="Dark Theme" :items="['Default', 'Cheesecake', 'Plum Tired']">
+                        label="Dark Theme" :items="['Default', 'Cheesecake', 'Placeholder Tired']">
                     </v-select>
                     <v-select disabled label="Light Theme" persistent-hint density="compact" hint="Theme used for light mode"
                         :items="['Default', 'Summertime', 'Aurora']">

@@ -38,11 +38,11 @@ function togglePause() {
             Last Timer: {{ lastTimerString }}
         </v-card-text>
 
-        <v-card-actions class="d-flex justify-space-evenly">
-            <v-btn @click="doReset" color="primary" variant="tonal">
+        <v-card-actions class="d-flex justify-space-around align-center">
+            <v-btn @click="doReset" color="secondary" variant="outlined" >
                 Reset
             </v-btn>
-            <v-btn color="primary" variant="flat" @click="togglePause">
+            <v-btn :color="isPaused? 'error' : 'secondary-darken-1'" variant="outlined" @click="togglePause" class="w-99">
                 {{ isPaused ? 'Resume' : 'Pause' }}
             </v-btn>
         </v-card-actions>

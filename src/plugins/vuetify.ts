@@ -15,12 +15,12 @@ import { ThemeDefinition, createVuetify } from 'vuetify'
 const darkPlumTheme: ThemeDefinition = {
   dark: true,
   colors: {
-    background: '#330022',
-    surface: '#FFFFFF',
-    primary: '#690055',
-    'primary-darken-1': '#3700B3',
-    secondary: '#03DAC6',
-    'secondary-darken-1': '#018786',
+    background: '#161613',
+    surface: '#2A2E45',
+    primary: '#5F61AB',
+    'primary-darken-1': '#464886',
+    secondary: '#7CC6FE',
+    'secondary-darken-1': '#35A6FD',
     error: '#B00020',
     info: '#2196F3',
     success: '#4CAF50',

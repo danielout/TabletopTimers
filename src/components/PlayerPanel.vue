@@ -1,61 +1,78 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, Ref } from 'vue';
 import { players } from '@/main';
-
 
 const props = defineProps<{
     playerid: number
 }>()
 
-const thisPlayer = players[props.playerid];
+const thisPlayer = ref(players[props.playerid]);
 
-let timerString = ref("00:00");
-let lastTimerString = ref("n/a");
-let isPaused = ref(false);
-
-thisPlayer.actionTimer.addEventListener('secondsUpdated', function () {
-    timerString.value = thisPlayer.actionTimer.getTimeValues().toString(['minutes', 'seconds']);
+thisPlayer.value.actionTimer.addEventListener('secondsUpdated', function () {
+    thisPlayer.value.actionTimerString = thisPlayer.value.actionTimer.getTimeValues().toString(['minutes', 'seconds']);
 });
 
-function doReset() {
-    lastTimerString.value = thisPlayer.actionTimer.getTimeValues().toString(['minutes', 'seconds'])
-    thisPlayer.actionTimer.reset();
-}
 
-function togglePause() {
-    if (isPaused.value) {
-        thisPlayer.actionTimer.start();
-    } else {
-        thisPlayer.actionTimer.pause();
-    }
-    isPaused.value = !isPaused.value;
+let highlightColor: Ref<string | number>  = ref('none');
+let borderColor: Ref<string> = ref('none');
+
+function toggleBorderHighlight() {
+  switch (highlightColor.value) {
+    case 0:
+      borderColor.value = 'success';
+      break;
+    case 1:
+      borderColor.value = 'info';
+      break;
+    case 2:
+      borderColor.value = 'warning';
+      break;
+    case 3:
+      borderColor.value = 'error';
+      break;
+    default:
+      borderColor.value = 'none';
+      break;
+  }
 }
 
 </script>
 
 
 <template>
-    <v-container class="pt-0 px-0 pb-2">
-        <v-expansion-panel>
-            <v-expansion-panel-title>
+    <v-sheet width="100%" class="pa-0 ma-0" :color="borderColor" rounded="lg" :border="borderColor != 'none' ? 'lg opacity-12' : 'lg opacity-0'">
+        <v-expansion-panel bg-color="primary">
+            <v-expansion-panel-title color="primary">
                 <v-container class="d-flex justify-space-between align-center pa-0 ma-0">
                     <span>{{ thisPlayer.name }}</span>
                     <v-container class="d-flex align-center pa-0 ma-0 w-auto">
-                        <span class="pr-1">{{ timerString }}</span>
-                        <span class="pr-1"><v-btn color="warning" icon="mdi-refresh" size="x-small"
-                                @click.stop="doReset"></v-btn></span>
-                        <v-btn :color="isPaused ? 'error' : 'success'" :icon="isPaused ? 'mdi-play' : 'mdi-pause'"
-                            size="x-small" @click.stop="togglePause"></v-btn>
+                        <span class="pr-1">{{ thisPlayer.actionTimerString }}</span>
+                        <span class="pr-1"><v-btn color="secondary" icon="mdi-refresh" size="x-small"
+                                @click.stop="thisPlayer.resetActionTimer()"></v-btn></span>
+                        <v-btn :color="thisPlayer.actionTimerPaused ? 'error' : 'secondary-darken-1'" :icon="thisPlayer.actionTimerPaused ? 'mdi-play' : 'mdi-pause'"
+                            size="x-small" @click.stop="thisPlayer.toggleActionTimer()"></v-btn>
                     </v-container>
                 </v-container>
             </v-expansion-panel-title>
-            <v-expansion-panel-text>
-                <v-container class="pa-0 ma-0 d-flex justify-space-between">
-                    <span>Last Timer:</span>
-                    <span>{{ lastTimerString }}</span>
+            <v-expansion-panel-text >
+                <v-container class="d-flex flex-column align-center justify-center pa-0 ma-0 w-100">
+                <v-container class="pa-0 ma-0 d-flex justify-space-between w-100">
+                    <span class="w-100">Last Timer:</span>
+                    <span>{{ thisPlayer.lastActionTimer }}</span>
                 </v-container>
+                <v-divider width="75%" thickness="2"></v-divider>
+                <v-container class="pa-0 ma-0 d-flex flex-column justify-space-between align-center w-100">
+                    <div class="text-caption">Reminder Highlight Color:</div>
+                    <v-btn-toggle density="compact" rounded="xl" v-model:model-value="highlightColor" @update:model-value="toggleBorderHighlight()">
+                        <v-btn ><v-icon size="x-large" color="success" icon="mdi-circle"></v-icon></v-btn>
+                        <v-btn ><v-icon size="x-large" color="info" icon="mdi-circle"></v-icon></v-btn>
+                        <v-btn ><v-icon size="x-large" color="warning" icon="mdi-circle"></v-icon></v-btn>
+                        <v-btn ><v-icon size="x-large" color="error" icon="mdi-circle"></v-icon></v-btn>
+                    </v-btn-toggle>
+                </v-container>
+            </v-container>
             </v-expansion-panel-text>
         </v-expansion-panel>
-    </v-container>
+    </v-sheet>
 </template>
 

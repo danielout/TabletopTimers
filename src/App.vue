@@ -2,15 +2,12 @@
 // Import Script Functions
 import { ref } from 'vue'
 // Import Globals
-import { appSettings, } from '@/main'
+import { appSettings } from '@/main'
 // import MenuBar from '@/components/MenuBar.vue'
 import HeaderTimers from '@/components/HeaderTimers.vue'
 import PlayerTimers from '@/components/PlayerTimers.vue'
 import SettingsMenu from '@/components/SettingsMenu.vue'
 import About from '@/components/About.vue'
-
-
-
 
 // What Window do we start on?
 let contentModel = ref("Timers");
@@ -26,8 +23,6 @@ const menuItems = [
 function changeWindow(whatdo: string) {
   contentModel.value = whatdo;
 }
-
-
 </script>
 
 <template>

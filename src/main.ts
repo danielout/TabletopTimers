@@ -7,11 +7,16 @@
 // Components
 import App from './App.vue'
 
+
 // Composables
 import { Ref, ref, createApp } from 'vue'
+const app = createApp(App)
 
 // Plugins
 import { registerPlugins } from '@/plugins'
+registerPlugins(app)
+
+
 
 // Logic
 import { SettingsManager } from '@/SettingsManager'
@@ -23,12 +28,11 @@ export const settingsRef = ref(new SettingsManager());
 // Define our Globals
 export const appGlobals = ref({
     showTutorial: false,
-    windowContent: 'timers',
 });
 
 // Create our player array
 export const playerRef: Ref<Array<Player>> = ref([]);
-// playerRef.value.push(new Player(0, "Gandalf"));
+playerRef.value.push(new Player(0, "Gandalf"));
 export const players = playerRef.value;
 
 // If there are local settings stored, load them
@@ -57,6 +61,4 @@ if (localStorage.getItem('settings')) {
 export const appSettings = settingsRef.value;
 
 // Mount the App
-const app = createApp(App)
-registerPlugins(app)
 app.mount('#app')
