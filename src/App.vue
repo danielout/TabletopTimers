@@ -2,7 +2,7 @@
 // Import Script Functions
 import { ref } from 'vue'
 // Import Globals
-import { appGlobals, appSettings, settingsRef } from '@/main'
+import { appSettings, } from '@/main'
 // import MenuBar from '@/components/MenuBar.vue'
 import HeaderTimers from '@/components/HeaderTimers.vue'
 import PlayerTimers from '@/components/PlayerTimers.vue'
@@ -10,15 +10,7 @@ import SettingsMenu from '@/components/SettingsMenu.vue'
 import About from '@/components/About.vue'
 
 
-// If there are local settings stored, load them
-if (localStorage.getItem('settings')) {
-  settingsRef.value = JSON.parse(localStorage.getItem('settings') || '{}');
-} else {
-  // If there are no local settings, save the defaults
-  localStorage.setItem('settings', JSON.stringify(appSettings));
-  // Enable our tutorial popup
-  appGlobals.value.showTutorial = true;
-}
+
 
 // What Window do we start on?
 let contentModel = ref("Timers");
@@ -63,10 +55,10 @@ function changeWindow(whatdo: string) {
     <!-- Main Content Area -->
     <v-main class="d-flex flex-column h-100 align-start">
       <v-window v-model="contentModel" class="w-100 h-100">
-        <v-window-item id="1" value="Timers" class="w-100">
+        <v-window-item id="1" value="Timers">
           <v-container class="d-flex flex-column h-100 align-start pa-0 ma-0" transition="scroll-x-transition">
             <HeaderTimers />
-            <PlayerTimers />
+            <PlayerTimers v-if="appSettings.display.showPlayerTimers" />
           </v-container>
         </v-window-item>
         <v-window-item id="2" value="Settings">

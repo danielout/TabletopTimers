@@ -1,9 +1,9 @@
-
+const CURRENT_SETTINGS_VERSION = 1;
 
 interface DisplaySettings {
-    showHeaderTimers: boolean;
+    showBigTimer: boolean;
     showPlayerTimers: boolean;
-    showExtraTimers: boolean;
+    showExtraTimer: boolean;
 }
 
 interface WarningSettings {
@@ -21,34 +21,34 @@ interface ThemingSettings {
     availableLightThemes: string[];
 }
 
+
 export class SettingsManager {
-    settings: {
-        display: DisplaySettings;
-        warning: WarningSettings;
-        theming: ThemingSettings;
-    };
+    display: DisplaySettings;
+    warning: WarningSettings;
+    theming: ThemingSettings;
+    settingsVersion: number = CURRENT_SETTINGS_VERSION;
+
 
     constructor() {
-        this.settings = {
-            display: {
-                showHeaderTimers: true,
-                showPlayerTimers: true,
-                showExtraTimers: true
-            },
-            warning: {
-                enableTimerWarnings: true,
-                warningThresholdType: "absolute",
-                warningThreshold: 5,
-                warningIntensity: "medium"
-            },
-            theming: {
-                themeType: "dark",
-                darkTheme: "dark",
-                lightTheme: "light",
-                availableDarkThemes: ["dark"],
-                availableLightThemes: ["light"]
-            }
-        };
+        this.display = {
+            showBigTimer: true,
+            showPlayerTimers: true,
+            showExtraTimer: true
+        }
+        this.warning = {
+            enableTimerWarnings: true,
+            warningThresholdType: "absolute",
+            warningThreshold: 5,
+            warningIntensity: "medium"
+        }
+        this.theming = {
+            themeType: "dark",
+            darkTheme: "dark",
+            lightTheme: "light",
+            availableDarkThemes: ["dark"],
+            availableLightThemes: ["light"]
+        }
+
     }
 
     // If themeType is auto, return darkTheme or lightTheme depending on system theme
@@ -58,9 +58,9 @@ export class SettingsManager {
 
         // Return the user selected theme that matches the system theme
         if (systemTheme === "dark") {
-            return this.settings.theming.darkTheme;
+            return this.theming.darkTheme;
         } else {
-            return this.settings.theming.lightTheme;
+            return this.theming.lightTheme;
         }
     }
 
