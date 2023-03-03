@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Ref, ref } from 'vue'
-import { Player } from '@/playerManagement';
+import { Player } from '@/logic/playerManagement.js';
 import { players } from '@/main';
 
 let newPlayerName: Ref<string> = ref("")

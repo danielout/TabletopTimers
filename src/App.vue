@@ -1,16 +1,16 @@
 <script setup lang="ts">
 // Import Script Functions
-import { ref } from 'vue'
+import { ref } from 'vue';
 // Import Globals
-import { appSettings } from '@/main'
+import { appSettings } from '@/main';
 // import MenuBar from '@/components/MenuBar.vue'
-import HeaderTimers from '@/components/HeaderTimers.vue'
-import PlayerTimers from '@/components/PlayerTimers.vue'
-import SettingsMenu from '@/components/SettingsMenu.vue'
-import About from '@/components/About.vue'
+import HeaderTimers from '@/components/topTimers/HeaderTimers.vue';
+import PlayerTimers from '@/components/playerList/PlayerTimers.vue';
+import SettingsMenu from '@/components/settings/SettingsMenu.vue';
+import About from '@/components/infoScreens/About.vue';
 
 // What Window do we start on?
-let contentModel = ref("Timers");
+let contentModel = ref('Timers');
 
 // Define our menu items - these should match the values of the v-window-item id's
 const menuItems = [
@@ -34,35 +34,42 @@ function changeWindow(whatdo: string) {
         <v-menu transition="slide-x-reverse-transition">
           <template v-slot:activator="{ props }">
             <v-btn icon="mdi-dots-vertical" color="primary" v-bind="props">
-
             </v-btn>
           </template>
 
           <v-list v-model="contentModel">
-            <v-list-item v-for="(item, i) in menuItems" :key="i" @click="changeWindow(item.title)">
+            <v-list-item
+              v-for="(item, i) in menuItems"
+              :key="i"
+              @click="changeWindow(item.title)">
               <v-list-item-title>{{ item.title }}</v-list-item-title>
             </v-list-item>
           </v-list>
         </v-menu>
-
       </template>
     </v-app-bar>
     <!-- Main Content Area -->
     <v-main class="d-flex flex-column h-100 align-start">
       <v-window v-model="contentModel" class="w-100 h-100">
         <v-window-item id="1" value="Timers">
-          <v-container class="d-flex flex-column h-100 align-start pa-0 ma-0" transition="scroll-x-transition">
+          <v-container
+            class="d-flex flex-column h-100 align-start pa-0 ma-0"
+            transition="scroll-x-transition">
             <HeaderTimers />
             <PlayerTimers v-if="appSettings.display.showPlayerTimers" />
           </v-container>
         </v-window-item>
         <v-window-item id="2" value="Settings">
-          <v-container class="d-flex flex-column h-100 align-start pa-0 ma-0" transition="scroll-x-transition">
+          <v-container
+            class="d-flex flex-column h-100 align-start pa-0 ma-0"
+            transition="scroll-x-transition">
             <SettingsMenu></SettingsMenu>
           </v-container>
         </v-window-item>
         <v-window-item id="3" value="About">
-          <v-container class="d-flex flex-column h-100 align-start pa-0 ma-0" transition="scroll-x-transition">
+          <v-container
+            class="d-flex flex-column h-100 align-start pa-0 ma-0"
+            transition="scroll-x-transition">
             <About></About>
           </v-container>
         </v-window-item>
@@ -70,5 +77,3 @@ function changeWindow(whatdo: string) {
     </v-main>
   </v-app>
 </template>
-
-

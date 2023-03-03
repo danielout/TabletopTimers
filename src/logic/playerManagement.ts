@@ -1,5 +1,5 @@
 import { Timer } from "easytimer.js";
-import { appSettings } from "./main";
+import { appSettings } from "../main";
 
 
 export class Player {

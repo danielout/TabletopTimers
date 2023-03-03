@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // import appSettings from '@/App.vue';
 import { appSettings, settingsRef } from '@/main';
-import { SettingsManager } from '@/SettingsManager';
+import { SettingsManager } from '@/logic/SettingsManager.js';
 
 
 //let themeStyle = appSettings.theming.themeType;

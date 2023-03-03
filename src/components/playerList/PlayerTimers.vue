@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import AddPlayer from '@/components/AddPlayer.vue'
-import PlayerPanel from '@/components/PlayerPanel.vue'
+import AddPlayer from '@/components/playerList/AddPlayer.vue'
+import PlayerPanel from '@/components/playerList/PlayerPanel.vue'
 import { players } from '@/main'
 
 function pauseAll(resumingAll: boolean) {

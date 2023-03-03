@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { appSettings } from '@/main';
-import TimerCard from '@/components/TimerCard.vue'
-import TimerPanel from '@/components/TimerPanel.vue'
+import TimerCard from '@/components/topTimers/TimerCard.vue'
+import TimerPanel from '@/components/topTimers/TimerPanel.vue'
 
 
 

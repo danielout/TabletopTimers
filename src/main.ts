@@ -19,8 +19,8 @@ registerPlugins(app)
 
 
 // Logic
-import { SettingsManager } from '@/SettingsManager'
-import { Player } from '@/playerManagement'
+import { SettingsManager } from '@/logic/SettingsManager'
+import { Player } from '@/logic/playerManagement'
 
 // Initialize our settings
 export const settingsRef = ref(new SettingsManager());
