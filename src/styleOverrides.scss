@@ -1,6 +1,6 @@
 @use 'vuetify/settings' with (
-  /*  Overrides to tighten up expansion panels*/ $expansion-panel-title-padding:
-    8px,
+  /*  Overrides to tighten up expansion panels*/ 
+  $expansion-panel-title-padding: 8px,
   $expansion-panel-title-min-height: 36px,
   $expansion-panel-active-title-min-height: 40px,
   $expansion-panel-text-padding: 4px 12px 4px

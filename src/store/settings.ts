@@ -12,7 +12,7 @@ export const useSettingsStore = defineStore({
     enableTimerWarnings: true,
     warningThresholdType: 'relative',
     warningThreshold: 5,
-    warningIntensity: 'medium',
+    warningIntensity: 'low',
     minWarningTime: 300,
 
     // Player Sorting

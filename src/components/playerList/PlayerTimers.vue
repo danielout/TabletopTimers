@@ -15,6 +15,7 @@ function toggleAllPause() {
   }
 }
 
+// Reset all player action timers
 function resetAll() {
   playerStore.players.forEach((who) => who.resetActionTimer());
 }
@@ -38,7 +39,7 @@ function resetAll() {
       class="align-self-strech d-flex justify-center flex-column align-start">
       <v-expansion-panels>
         <PlayerPanel
-          v-for="who in playerStore.players"
+          v-for="who in playerStore.sortedByTimeWithPausedOnBottom"
           v-bind:key="who.id"
           :playerid="who.id">
         </PlayerPanel>

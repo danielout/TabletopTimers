@@ -1,4 +1,8 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+// Pull in our state management
+import { useSettingsStore } from '@/store/settings';
+const settingsStore = useSettingsStore();
+</script>
 <template>
   <v-expansion-panel>
     <v-expansion-panel-title>Player Warnings</v-expansion-panel-title>
@@ -6,22 +10,22 @@
       class="d-flex flex-column justify-center align-center">
       <v-container
         class="d-flex flex-row justify-space-between align-center ma-0 pa-0">
-        <span class="w-100">Display Player Timers</span>
+        <span class="w-100">Enable Player Warnings</span>
         <v-switch
-          disabled
           hide-details="auto"
           color="secondary"
-          density="compact">
+          density="compact"
+          v-model:model-value="settingsStore.enableTimerWarnings">
         </v-switch>
       </v-container>
       <div class="text-subtitle-2">Warning Intensity</div>
-      <v-btn-toggle disabled mandatory>
+      <v-btn-toggle disabled mandatory density="compact">
         <v-btn value="low">Low</v-btn>
         <v-btn value="medium">Medium</v-btn>
         <v-btn value="high">High</v-btn>
       </v-btn-toggle>
       <div class="text-subtitle-2">Threshold Type</div>
-      <v-btn-toggle disabled mandatory>
+      <v-btn-toggle disabled mandatory density="compact">
         <v-btn value="time">Time</v-btn>
         <v-btn value="percent">Percent</v-btn>
       </v-btn-toggle>
@@ -30,11 +34,13 @@
         <v-select
           disabled
           density="compact"
+          hide-details
           :items="[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]">
         </v-select
         ><v-select
           disabled
           density="compact"
+          hide-details
           :items="[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]">
         </v-select
         >mins/pct
@@ -51,11 +57,13 @@
         <v-select
           disabled
           density="compact"
+          hide-details
           :items="[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]">
         </v-select
         ><v-select
           disabled
           density="compact"
+          hide-details
           :items="[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]">
         </v-select>
       </v-container>

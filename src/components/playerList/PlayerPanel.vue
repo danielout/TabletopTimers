@@ -27,16 +27,16 @@ let borderColor: Ref<string> = ref('none');
 function toggleBorderHighlight() {
   switch (highlightColor.value) {
     case 0:
-      borderColor.value = 'success';
+      borderColor.value = 'highlight0';
       break;
     case 1:
-      borderColor.value = 'info';
+      borderColor.value = 'highlight1';
       break;
     case 2:
-      borderColor.value = 'warning';
+      borderColor.value = 'highlight2';
       break;
     case 3:
-      borderColor.value = 'error';
+      borderColor.value = 'highlight3';
       break;
     default:
       borderColor.value = 'none';
@@ -95,20 +95,26 @@ function toggleBorderHighlight() {
               <v-btn
                 ><v-icon
                   size="x-large"
-                  color="success"
+                  color="highlight0"
                   icon="mdi-circle"></v-icon
               ></v-btn>
               <v-btn
-                ><v-icon size="x-large" color="info" icon="mdi-circle"></v-icon
+                ><v-icon 
+                size="x-large" 
+                color="highlight1" 
+                icon="mdi-circle"></v-icon
               ></v-btn>
               <v-btn
                 ><v-icon
                   size="x-large"
-                  color="warning"
+                  color="highlight2"
                   icon="mdi-circle"></v-icon
               ></v-btn>
               <v-btn
-                ><v-icon size="x-large" color="error" icon="mdi-circle"></v-icon
+                ><v-icon 
+                size="x-large" 
+                color="highlight3" 
+                icon="mdi-circle"></v-icon
               ></v-btn>
             </v-btn-toggle>
           </v-container>

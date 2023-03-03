@@ -1,8 +1,5 @@
 // Import any needed logic bits
 import { Timer } from 'easytimer.js';
-// Import necessary stores
-// import { useSettingsStore } from "@/store/settings";
-// const settingsStore = useSettingsStore();
 
 export class Player {
   id: number;
@@ -82,68 +79,3 @@ export class Player {
     }
   }
 }
-/*
-
-export function calculateWarnings(players: Array<Player>) {
-    // If warnings aren't enabled, turn them all off and nope on out.
-    if (!settingsStore.enableTimerWarnings) {
-        players.forEach(player => {
-            player.reminderFlag = "none";
-        });
-        return;
-    }
-
-    // If we don't have at least 3 players, turn off all warnings
-    if (players.length <= 2) {
-        players.forEach(player => {
-            player.reminderFlag = "none";
-        });
-        return;
-    }
-
-    // calculate the average action timer duration for all players
-    let totalActionTimer = 0;
-    let totalPlayers = 0;
-    players.forEach(player => {
-        if (player.actionTimer.getTimeValues().seconds > 0) {
-            totalActionTimer += player.actionTimer.getTimeValues().seconds;
-            totalPlayers++;
-        }
-    });
-    const averageActionTimer = totalActionTimer / totalPlayers;
-
-    // Apply the appropriate warning calculation
-    if (settingsStore.warningThresholdType === "relative") {
-        calculateRelativeWarnings(averageActionTimer, players);
-    } else {
-        calculateAbosoluteWarnings(averageActionTimer, players);
-    }
-
-}
-
-function calculateRelativeWarnings(averageTimer: number, players: Array<Player>) {
-    // use averageTimer and settingsStore.warningThreshold to calculate relative warnings
-    const warningThresh = averageTimer * (1 + (settingsStore.warningThreshold / 100));
-    players.forEach(player => {
-        if (player.actionTimer.getTimeValues().seconds < settingsStore.minWarningTime) { return; }
-        if (player.actionTimer.getTimeValues().seconds > warningThresh) {
-            player.reminderFlag = settingsStore.warningIntensity;
-        } else {
-            player.reminderFlag = "none";
-        }
-    });
-}
-
-function calculateAbosoluteWarnings(averageTimer: number, players: Array<Player>) {
-    // use averageTimer and settingsStore.warningThreshold to calculate absolute warnings
-    const warningThresh = averageTimer + settingsStore.warningThreshold;
-    players.forEach(player => {
-        if (player.actionTimer.getTimeValues().seconds > warningThresh) {
-            player.reminderFlag = settingsStore.warningIntensity;
-        } else {
-            player.reminderFlag = "none";
-        }
-    });
-}
-
-*/

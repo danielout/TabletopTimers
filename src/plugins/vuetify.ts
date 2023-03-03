@@ -25,6 +25,10 @@ const darkPlumTheme: ThemeDefinition = {
     info: '#2196F3',
     success: '#4CAF50',
     warning: '#FB8C00',
+    highlight0: '#FF0000',
+    highlight1: '#FF7F00',
+    highlight2: '#FFFF00',
+    highlight3: '#00FF00',
   },
 };
 
@@ -41,6 +45,10 @@ const lightTheme: ThemeDefinition = {
     info: '#2196F3',
     success: '#4CAF50',
     warning: '#FB8C00',
+    highlight0: '#FF0000',
+    highlight1: '#FF7F00',
+    highlight2: '#FFFF00',
+    highlight3: '#00FF00',
   },
 };
 
