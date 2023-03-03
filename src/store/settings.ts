@@ -1,23 +1,28 @@
 import { defineStore } from 'pinia';
 
 export const useSettingsStore = defineStore({
-    id: 'settings',
-    state: () => ({
-        display: {
-            showBigTimer: true,
-            showPlayerTimers: true,
-            showExtraTimer: true
-        },
-        warning: {
-            enableTimerWarnings: true,
-            warningThresholdType: "absolute",
-            warningThreshold: 5,
-            warningIntensity: "medium"
-        }
-    }),
-    getters: {
-        warningMimimumTime(): number {
-            return 300;
-        }
-    }
+  id: 'settings',
+  state: () => ({
+    // Toggle component display
+    showBigTimer: true,
+    showPlayerTimers: true,
+    showExtraTimer: true,
+
+    // Player Timer Warnings
+    enableTimerWarnings: true,
+    warningThresholdType: 'relative',
+    warningThreshold: 5,
+    warningIntensity: 'medium',
+    minWarningTime: 300,
+
+    // Player Sorting
+    enableAutoSort: true,
+    sortPlayersBy: 'name',
+    pausedOnBottom: true,
+
+    // Player Timer Display
+    forceExpandedTimers: false,
+    hideHighligtButtons: false,
+  }),
+  persist: true,
 });

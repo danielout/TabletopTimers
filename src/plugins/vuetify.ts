@@ -5,12 +5,12 @@
  */
 
 // Styles
-import '@mdi/font/css/materialdesignicons.css'
-import 'vuetify/styles'
-import { md2 } from 'vuetify/blueprints'
+import '@mdi/font/css/materialdesignicons.css';
+import 'vuetify/styles';
+import { md2 } from 'vuetify/blueprints';
 
 // Composables
-import { ThemeDefinition, createVuetify } from 'vuetify'
+import { ThemeDefinition, createVuetify } from 'vuetify';
 
 const darkPlumTheme: ThemeDefinition = {
   dark: true,
@@ -25,8 +25,8 @@ const darkPlumTheme: ThemeDefinition = {
     info: '#2196F3',
     success: '#4CAF50',
     warning: '#FB8C00',
-  }
-}
+  },
+};
 
 const lightTheme: ThemeDefinition = {
   dark: false,
@@ -41,8 +41,8 @@ const lightTheme: ThemeDefinition = {
     info: '#2196F3',
     success: '#4CAF50',
     warning: '#FB8C00',
-  }
-}
+  },
+};
 
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 export default createVuetify({
@@ -50,7 +50,8 @@ export default createVuetify({
   theme: {
     defaultTheme: 'darkPlumTheme',
     themes: {
-      darkPlumTheme, lightTheme
-    }
+      darkPlumTheme,
+      lightTheme,
+    },
   },
-})
+});
