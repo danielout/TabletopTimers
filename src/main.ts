@@ -32,7 +32,7 @@ export const appGlobals = ref({
 
 // Create our player array
 export const playerRef: Ref<Array<Player>> = ref([]);
-playerRef.value.push(new Player(0, "Gandalf"));
+// 
 export const players = playerRef.value;
 
 // If there are local settings stored, load them
@@ -59,6 +59,19 @@ if (localStorage.getItem('settings')) {
 
 // Save ourselves remembering to use .value everywhere if we just need to read the data.
 export const appSettings = settingsRef.value;
+
+
+// Dev mode settings.
+if (import.meta.env.VITE_DEV_MODE == 'true') {
+    console.log("Running in dev mode");
+
+    // Add some test players
+    playerRef.value.push(new Player(0, "Gandalf"));
+    playerRef.value.push(new Player(1, "Kesha"));
+    playerRef.value.push(new Player(2, "Jeff Bone"));
+    playerRef.value.push(new Player(3, "Danny DeVito"));
+}
+
 
 // Mount the App
 app.mount('#app')

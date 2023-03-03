@@ -26,6 +26,7 @@ export class SettingsManager {
     display: DisplaySettings;
     warning: WarningSettings;
     theming: ThemingSettings;
+    warningMimimumTime: number = 300;
     settingsVersion: number = CURRENT_SETTINGS_VERSION;
 
 

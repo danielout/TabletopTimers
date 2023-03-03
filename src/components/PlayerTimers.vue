@@ -3,10 +3,16 @@ import AddPlayer from '@/components/AddPlayer.vue'
 import PlayerPanel from '@/components/PlayerPanel.vue'
 import { players } from '@/main'
 
-function pauseAll() {
-    players.forEach(player => {
-        player.pauseActionTimer();
-    });
+function pauseAll(resumingAll: boolean) {
+    if (resumingAll) {
+        players.forEach(player => {
+            player.resumeActionTimer();
+        });
+    } else {
+        players.forEach(player => {
+            player.pauseActionTimer();
+        });
+    }
 }
 
 function resetAll() {
@@ -14,6 +20,18 @@ function resetAll() {
         player.resetActionTimer();
     });
 }
+
+// return true if all timers are paused
+function allPaused() {
+    let allPaused = true;
+    players.forEach(player => {
+        if (!player.actionTimerPaused) {
+            allPaused = false;
+        }
+    });
+    return allPaused;
+}
+
 
 </script>
 
@@ -23,7 +41,7 @@ function resetAll() {
         <AddPlayer></AddPlayer>
     <v-container class="d-flex flex-row justify-space-around w-80 align-center pa-0 ma-0">
         <v-btn size="small" color="primary" class="w-40" @click="resetAll()">Reset All</v-btn>
-        <v-btn size="small" color="primary" class="w-40" @click="pauseAll()">Pause All</v-btn>
+        <v-btn size="small" color="primary" class="w-40" @click="pauseAll(allPaused())">{{ allPaused() ? 'Resume All' : 'Pause All'}}</v-btn>
         </v-container>
         <v-container class="align-self-strech d-flex justify-center flex-column align-start">
             <v-expansion-panels >
