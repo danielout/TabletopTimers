@@ -5,7 +5,9 @@ import { Player } from '@/logic/playerManagement';
 // Import our child components
 // Import and assign our state management
 import { usePlayerStore } from '@/store/players';
+import { useSettingsStore } from '@/store/settings';
 const playerStore = usePlayerStore();
+const settingsStore = useSettingsStore();
 
 const props = defineProps<{
   playerid: number;
@@ -43,6 +45,57 @@ function toggleBorderHighlight() {
       break;
   }
 }
+
+// If this player's actionTimerSeconds is more than settingsStore.warningThreshold higher than the average, highlight the border
+setInterval(() => {
+  if (settingsStore.exceedsWarningThreshold(playerStore.averageActionTimer([]), thisPlayer.actionTimerSeconds)) {
+    enableWarning();
+  } else {
+    disableWarning();
+  }
+  toggleBorderHighlight();
+}, 1000);
+
+let lowWarning: Ref<boolean> = ref(false);
+let mediumWarning: Ref<boolean> = ref(false);
+let highWarning: Ref<boolean> = ref(false);
+
+// Turn on the appropriate warning based on settings.warningIntensity
+function enableWarning() {
+  switch (settingsStore.warningIntensityString) {
+    case "low":
+      lowWarning.value = true;
+      mediumWarning.value = false;
+      highWarning.value = false;
+      break;
+    case "medium":
+      lowWarning.value = false;
+      mediumWarning.value = true;
+      highWarning.value = false;
+      break;
+    case "high":
+      lowWarning.value = false;
+      mediumWarning.value = false;
+      highWarning.value = true;
+      break;
+    default:
+      console.log("default")
+      lowWarning.value = false;
+      mediumWarning.value = false;
+      highWarning.value = false;
+      break;
+  }
+}
+
+// Turn off all warnings
+function disableWarning() {
+  lowWarning.value = false;
+  mediumWarning.value = false;
+  highWarning.value = false;
+}
+
+
+
 </script>
 
 <template>
@@ -53,13 +106,15 @@ function toggleBorderHighlight() {
     rounded="lg"
     :border="borderColor != 'none' ? 'lg opacity-12' : 'lg opacity-0'">
     <v-expansion-panel bg-color="primary">
-      <v-expansion-panel-title color="primary">
+      <v-expansion-panel-title :color="highWarning ? 'error' : 'primary'">
         <v-container
           class="d-flex justify-space-between align-center pa-0 ma-0">
           <span>{{ thisPlayer.name }}</span>
           <v-container class="d-flex align-center pa-0 ma-0 w-auto">
-            <span class="pr-1">{{ thisPlayer.actionTimerString }}</span>
-            <span class="pr-1"
+            <v-sheet class="pa-1 rounded" :color="mediumWarning ? 'error' : 'primary'">
+              <span :class="lowWarning ? 'font-weight-bold text-warning' : ''">{{ thisPlayer.actionTimerString }}</span>
+            </v-sheet>
+            <span class="px-1"
               ><v-btn
                 color="secondary"
                 icon="mdi-refresh"

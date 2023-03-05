@@ -81,7 +81,19 @@ export const usePlayerStore = defineStore({
           break;
       }
       return sortedPlayers;
-    }
+    },
+    // Return average of player's action timers, omitting players specified in 'omittedPlayers' array
+    averageActionTimer(omittedPlayers: Array<Player>): number {
+      let total = 0;
+      let count = 0;
+      this.players.forEach((player) => {
+        if (!omittedPlayers.includes(player)) {
+          total += player.actionTimerSeconds;
+          count++;
+        }
+      });
+      return total / count;
+    },
 
   }
 
