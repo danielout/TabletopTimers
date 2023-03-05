@@ -21,40 +21,68 @@ export const usePlayerStore = defineStore({
     pausedPlayers(): Array<Player> {
       return this.players.filter((player) => player.actionTimerPaused);
     },
-    // Return a lsit of players sorted by name
-    sortedPlayers(): Array<Player> {
-      return this.players.sort((a, b) => a.name.localeCompare(b.name));
+  },
+  actions: {
+    // Add a new player to the list
+    addPlayer(name: string) {
+      const newPlayer = new Player(this.playerCount, name);
+      this.players.push(newPlayer);
     },
-    // Return a list of players sorted by highest actionTimer
-    sortedByTime(): Array<Player> {
-      return this.players.sort((a, b) => b.actionTimer.getTotalTimeValues().seconds - a.actionTimer.getTotalTimeValues().seconds);
+    // Remove a player from the list
+    removePlayer(id: number) {
+      this.players.splice(id, 1);
     },
-    // Return a list of players sorted by highest extraTimer
-    sortedByExtraTime(): Array<Player> {
-      return this.players.sort((a, b) => b.extraTimer.getTotalTimeValues().seconds - a.extraTimer.getTotalTimeValues().seconds);
+    // Pause all players
+    pauseAll() {
+      this.players.forEach((player) => player.pauseActionTimer());
     },
-    // return a list of players sorted by name, but with paused players on the bottom
-    sortedPlayersWithPausedOnBottom(): Array<Player> {
-      return this.players.sort((a, b) => {
-        if (a.actionTimerPaused && !b.actionTimerPaused) {
-          return 1;
-        } else if (!a.actionTimerPaused && b.actionTimerPaused) {
-          return -1;
-        } else {
-          return a.name.localeCompare(b.name);
-        }
-      });
+    // Resume all players
+    resumeAll() {
+      this.players.forEach((player) => player.resumeActionTimer());
     },
-    // Return a list of players sorted by highest actionTimer, but with paused players on the bottom
-    sortedByTimeWithPausedOnBottom(): Array<Player> {
-      return this.players.sort((a, b) => {
-        if (a.actionTimerPaused && !b.actionTimerPaused) {
-          return 1;
-        } else if (!a.actionTimerPaused && b.actionTimerPaused) {
-          return -1;
-        } else {
-          return b.actionTimer.getTotalTimeValues().seconds - a.actionTimer.getTotalTimeValues().seconds;
-        }
-      });
+    // Reset all players
+    resetAll() {
+      this.players.forEach((player) => player.resetActionTimer());
+    },
+    sortPlayerList(sortBy: string, pausedOnBottom: boolean, reversed: boolean): Array<Player> {
+      const pausedList = this.pausedPlayers;
+      const activeList = this.activePlayers;
+      let sortedList: Array<Player> = []
+      // If we want paused players on the bottom, sort them separately and combine the lists
+      if (!pausedOnBottom) {
+        sortedList = this.sortByType(this.players, sortBy);
+      } else {
+        sortedList = this.sortByType(activeList, sortBy).concat(this.sortByType(pausedList, sortBy));
+      }
+
+      // No idea why someone might want this, but hey, it's there
+      if (reversed) {
+        sortedList.reverse();
+      }
+
+      // Return the sorted list
+      return sortedList;
+    },
+    // Return array of players sorted by desired method
+    sortByType(sortedPlayer: Array<Player>, sortBy: string): Array<Player> {
+      let sortedPlayers: Array<Player> = [];
+      switch (sortBy) {
+        case 'name':
+          // Sort by name
+          sortedPlayers = sortedPlayer.sort((a, b) => a.name.localeCompare(b.name));
+          break;
+        case 'actionTimer':
+          // Sort by highest action timer
+          sortedPlayers = sortedPlayer.sort((a, b) => b.actionTimerSeconds - a.actionTimerSeconds);
+          break;
+        default:
+          // Sort by id (default)
+          sortedPlayers = sortedPlayer.sort((a, b) => a.id - b.id);
+          break;
+      }
+      return sortedPlayers;
     }
-}});
+
+  }
+
+});

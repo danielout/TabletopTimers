@@ -78,4 +78,9 @@ export class Player {
       this.pauseExtraTimer();
     }
   }
+
+  get actionTimerSeconds(): number {
+    return this.actionTimer.getTotalTimeValues().seconds;
+  }
+
 }

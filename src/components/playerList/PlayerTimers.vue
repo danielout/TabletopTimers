@@ -1,10 +1,14 @@
 <script setup lang="ts">
+import { ref, Ref } from 'vue';
+import { Player } from '@/logic/playerManagement';
 // Import our child components
 import AddPlayer from '@/components/playerList/AddPlayer.vue';
 import PlayerPanel from '@/components/playerList/PlayerPanel.vue';
 // Import and assign our state management
 import { usePlayerStore } from '@/store/players';
+import { useSettingsStore } from '@/store/settings';
 const playerStore = usePlayerStore();
+const settingsStore = useSettingsStore();
 
 // If all the players are paused, resume them all. Otherwise pause everyone.
 function toggleAllPause() {
@@ -19,6 +23,18 @@ function toggleAllPause() {
 function resetAll() {
   playerStore.players.forEach((who) => who.resetActionTimer());
 }
+
+// Need to keep our players in an array sorted according to the settings.
+let sortedPlayers: Ref<Player[]> = ref(playerStore.players);
+
+// Updated the sortedPlayers array every second
+setInterval(() => {
+  if (settingsStore.enableAutoSort) {
+  sortedPlayers.value = playerStore.sortPlayerList(settingsStore.sortPlayersBy, settingsStore.pausedOnBottom, settingsStore.reverseSort);
+  } else {
+  sortedPlayers.value = playerStore.players;
+  }
+}, 1000);
 
 </script>
 
@@ -37,11 +53,10 @@ function resetAll() {
     </v-container>
     <v-container
       class="align-self-strech d-flex justify-center flex-column align-start">
-      <v-expansion-panels>
-        <PlayerPanel
-          v-for="who in playerStore.sortedByTimeWithPausedOnBottom"
-          v-bind:key="who.id"
-          :playerid="who.id">
+      <v-expansion-panels v-for="who in sortedPlayers"
+          v-bind:key="who.id" class="mb-1">
+        <PlayerPanel :playerid="who.id" :value="who.id"
+          >
         </PlayerPanel>
       </v-expansion-panels>
     </v-container>

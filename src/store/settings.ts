@@ -17,8 +17,9 @@ export const useSettingsStore = defineStore({
 
     // Player Sorting
     enableAutoSort: true,
-    sortPlayersBy: 'name',
+    sortPlayersBy: 'name',  // name, actionTimer, id
     pausedOnBottom: true,
+    reverseSort: false,
 
     // Player Timer Display
     forceExpandedTimers: false,
