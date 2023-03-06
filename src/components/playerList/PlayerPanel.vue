@@ -48,7 +48,12 @@ function toggleBorderHighlight() {
 
 // If this player's actionTimerSeconds is more than settingsStore.warningThreshold higher than the average, highlight the border
 setInterval(() => {
-  if (settingsStore.exceedsWarningThreshold(playerStore.averageActionTimer([]), thisPlayer.actionTimerSeconds)) {
+  if (
+    settingsStore.exceedsWarningThreshold(
+      playerStore.averageActionTimer([]),
+      thisPlayer.actionTimerSeconds
+    )
+  ) {
     enableWarning();
   } else {
     disableWarning();
@@ -63,23 +68,23 @@ let highWarning: Ref<boolean> = ref(false);
 // Turn on the appropriate warning based on settings.warningIntensity
 function enableWarning() {
   switch (settingsStore.warningIntensityString) {
-    case "low":
+    case 'low':
       lowWarning.value = true;
       mediumWarning.value = false;
       highWarning.value = false;
       break;
-    case "medium":
+    case 'medium':
       lowWarning.value = false;
       mediumWarning.value = true;
       highWarning.value = false;
       break;
-    case "high":
+    case 'high':
       lowWarning.value = false;
       mediumWarning.value = false;
       highWarning.value = true;
       break;
     default:
-      console.log("default")
+      console.log('default');
       lowWarning.value = false;
       mediumWarning.value = false;
       highWarning.value = false;
@@ -93,9 +98,6 @@ function disableWarning() {
   mediumWarning.value = false;
   highWarning.value = false;
 }
-
-
-
 </script>
 
 <template>
@@ -111,23 +113,29 @@ function disableWarning() {
           class="d-flex justify-space-between align-center pa-0 ma-0">
           <span>{{ thisPlayer.name }}</span>
           <v-container class="d-flex align-center pa-0 ma-0 w-auto">
-            <v-sheet class="pa-1 rounded" :color="mediumWarning ? 'error' : 'primary'">
-              <span :class="lowWarning ? 'font-weight-bold text-warning' : ''">{{ thisPlayer.actionTimerString }}</span>
+            <v-sheet
+              class="pa-1 rounded"
+              :color="mediumWarning ? 'error' : 'primary'">
+              <span :class="lowWarning ? 'font-weight-bold text-warning' : ''">
+                {{ thisPlayer.actionTimerString }}
+              </span>
             </v-sheet>
             <span class="px-1"
               ><v-btn
                 color="secondary"
                 icon="mdi-refresh"
                 size="x-small"
-                @click.stop="thisPlayer.resetActionTimer()"></v-btn
-            ></span>
+                @click.stop="thisPlayer.resetActionTimer()">
+              </v-btn>
+            </span>
             <v-btn
               :color="
                 thisPlayer.actionTimerPaused ? 'error' : 'secondary-darken-1'
               "
               :icon="thisPlayer.actionTimerPaused ? 'mdi-play' : 'mdi-pause'"
               size="x-small"
-              @click.stop="thisPlayer.toggleActionTimer()"></v-btn>
+              @click.stop="thisPlayer.toggleActionTimer()">
+            </v-btn>
           </v-container>
         </v-container>
       </v-expansion-panel-title>
@@ -147,30 +155,22 @@ function disableWarning() {
               rounded="xl"
               v-model:model-value="highlightColor"
               @update:model-value="toggleBorderHighlight()">
+              <v-btn>
+                <v-icon size="x-large" color="highlight0" icon="mdi-circle">
+                </v-icon>
+              </v-btn>
+              <v-btn>
+                <v-icon size="x-large" color="highlight1" icon="mdi-circle">
+                </v-icon>
+              </v-btn>
+              <v-btn>
+                <v-icon size="x-large" color="highlight2" icon="mdi-circle">
+                </v-icon>
+              </v-btn>
               <v-btn
-                ><v-icon
-                  size="x-large"
-                  color="highlight0"
-                  icon="mdi-circle"></v-icon
-              ></v-btn>
-              <v-btn
-                ><v-icon 
-                size="x-large" 
-                color="highlight1" 
-                icon="mdi-circle"></v-icon
-              ></v-btn>
-              <v-btn
-                ><v-icon
-                  size="x-large"
-                  color="highlight2"
-                  icon="mdi-circle"></v-icon
-              ></v-btn>
-              <v-btn
-                ><v-icon 
-                size="x-large" 
-                color="highlight3" 
-                icon="mdi-circle"></v-icon
-              ></v-btn>
+                ><v-icon size="x-large" color="highlight3" icon="mdi-circle">
+                </v-icon>
+              </v-btn>
             </v-btn-toggle>
           </v-container>
         </v-container>

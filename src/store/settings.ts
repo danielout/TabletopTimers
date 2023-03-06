@@ -13,12 +13,12 @@ export const useSettingsStore = defineStore({
     warningsRelative: true,
     warningRelativeThreshold: 150,
     warningAbsoluteThreshold: 5,
-    warningIntensityString: "low", // low, medium, high
+    warningIntensityString: 'low', // low, medium, high
     minWarningTime: 15,
 
     // Player Sorting
     enableAutoSort: true,
-    sortPlayersBy: 'name',  // name, actionTimer, id
+    sortPlayersBy: 'name', // name, actionTimer, id
     pausedOnBottom: true,
     reverseSort: false,
 
@@ -44,7 +44,7 @@ export const useSettingsStore = defineStore({
         default:
           return -1;
       }
-    }
+    },
   },
   actions: {
     exceedsWarningThreshold(average: number, timer: number): boolean {
@@ -69,7 +69,7 @@ export const useSettingsStore = defineStore({
       const maxSeverity = minSeverity * 2;
       // Return a value between 0 and 1, based on where 'timer' falls between 'minSeverity' and 'maxSeverity'
       return (timer - minSeverity) / (maxSeverity - minSeverity);
-    }
+    },
   },
   persist: true,
 });

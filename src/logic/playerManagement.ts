@@ -82,5 +82,4 @@ export class Player {
   get actionTimerSeconds(): number {
     return this.actionTimer.getTotalTimeValues().seconds;
   }
-
 }

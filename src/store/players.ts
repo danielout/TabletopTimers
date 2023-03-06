@@ -44,15 +44,21 @@ export const usePlayerStore = defineStore({
     resetAll() {
       this.players.forEach((player) => player.resetActionTimer());
     },
-    sortPlayerList(sortBy: string, pausedOnBottom: boolean, reversed: boolean): Array<Player> {
+    sortPlayerList(
+      sortBy: string,
+      pausedOnBottom: boolean,
+      reversed: boolean
+    ): Array<Player> {
       const pausedList = this.pausedPlayers;
       const activeList = this.activePlayers;
-      let sortedList: Array<Player> = []
+      let sortedList: Array<Player> = [];
       // If we want paused players on the bottom, sort them separately and combine the lists
       if (!pausedOnBottom) {
         sortedList = this.sortByType(this.players, sortBy);
       } else {
-        sortedList = this.sortByType(activeList, sortBy).concat(this.sortByType(pausedList, sortBy));
+        sortedList = this.sortByType(activeList, sortBy).concat(
+          this.sortByType(pausedList, sortBy)
+        );
       }
 
       // No idea why someone might want this, but hey, it's there
@@ -69,11 +75,15 @@ export const usePlayerStore = defineStore({
       switch (sortBy) {
         case 'name':
           // Sort by name
-          sortedPlayers = sortedPlayer.sort((a, b) => a.name.localeCompare(b.name));
+          sortedPlayers = sortedPlayer.sort((a, b) =>
+            a.name.localeCompare(b.name)
+          );
           break;
         case 'actionTimer':
           // Sort by highest action timer
-          sortedPlayers = sortedPlayer.sort((a, b) => b.actionTimerSeconds - a.actionTimerSeconds);
+          sortedPlayers = sortedPlayer.sort(
+            (a, b) => b.actionTimerSeconds - a.actionTimerSeconds
+          );
           break;
         default:
           // Sort by id (default)
@@ -94,7 +104,5 @@ export const usePlayerStore = defineStore({
       });
       return total / count;
     },
-
-  }
-
+  },
 });
