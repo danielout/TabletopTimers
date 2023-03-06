@@ -29,6 +29,8 @@ const darkPlumTheme: ThemeDefinition = {
     highlight1: '#FF7F00',
     highlight2: '#FFFF00',
     highlight3: '#00FF00',
+    timerWarning: '#DD7F00',
+    timerDanger: '#DD2200',
   },
 };
 
@@ -49,6 +51,8 @@ const lightTheme: ThemeDefinition = {
     highlight1: '#FF7F00',
     highlight2: '#FFFF00',
     highlight3: '#00FF00',
+    timerWarning: '#DD7F00',
+    timerDanger: '#DD2200',
   },
 };
 

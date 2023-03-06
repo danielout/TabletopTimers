@@ -15,8 +15,5 @@ const app = createApp(App);
 import { registerPlugins } from '@/plugins';
 registerPlugins(app);
 
-import { registerVuetify } from '@/plugins/vuetifyLoader';
-registerVuetify(app);
-
 // Mount the App
 app.mount('#app');

@@ -2,10 +2,14 @@
 import { ref, Ref } from 'vue';
 import { ThemeDefinition, useTheme } from 'vuetify';
 import { adjustColor, blendColors } from '@/logic/colorFunctions';
+
 // Import our store info
+import { useDevStore } from '@/devTools/devSettings';
 import { useThemeSettingsStore, useThemeListStore } from '@/store/themes';
 const themeSettingsStore = useThemeSettingsStore();
 const themeListStore = useThemeListStore();
+const devStore = useDevStore();
+
 
 // Define a type for our preview colors so TypeScript stops fucking complaining
 type ColorPreview = {
@@ -460,8 +464,8 @@ function updateCustomThemePreview() {
         </v-sheet>
       </v-sheet>
     </v-sheet>
-    <v-expansion-panels variant="accordion" class="px-3 pt-0 ma-0">
-      <v-expansion-panel>
+    <v-expansion-panels variant="accordion" class="px-3 pt-0 ma-0" model-value="settings">
+      <v-expansion-panel value="settings">
         <v-expansion-panel-title> Theme Settings </v-expansion-panel-title>
         <v-expansion-panel-text
           class="d-flex flex-column justify-center align-center">
@@ -492,7 +496,7 @@ function updateCustomThemePreview() {
           </v-select>
         </v-expansion-panel-text>
       </v-expansion-panel>
-      <v-expansion-panel>
+      <v-expansion-panel :style="devStore.devMode ? '' : 'display: none'">
         <v-expansion-panel-title> Custom Theme Editor </v-expansion-panel-title>
         <v-expansion-panel-text
           class="d-flex flex-column justify-center align-center">
