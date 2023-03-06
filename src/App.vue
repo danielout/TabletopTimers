@@ -74,11 +74,14 @@ function changeWindow(whatdo: string) {
       </template>
     </v-app-bar>
     <!-- Main Content Area -->
-    <v-main class="d-flex flex-column h-100 align-start">
-      <v-window v-model="appConfigStore.currentWindow" class="w-100 h-100">
-        <v-window-item id="1" value="Timers">
+    <v-main id="mainbody" class="d-flex flex-column h-100 align-start justify-center">
+      <v-window 
+      id="bodyContent" 
+      v-model="appConfigStore.currentWindow" 
+      class="w-100 h-100 align-center justify-center">
+        <v-window-item id="1" value="Timers" class="align-center justify-center">
           <v-container
-            class="d-flex flex-column h-100 align-start pa-0 ma-0"
+            class="d-flex flex-column h-100 w-100 align-start justify-space-around pa-0 ma-0"
             transition="scroll-x-transition">
             <HeaderTimers />
             <PlayerTimers v-if="settingsStore.showPlayerTimers" />
@@ -109,3 +112,27 @@ function changeWindow(whatdo: string) {
     </v-main>
   </v-app>
 </template>
+
+<style>
+html, body {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;  
+}
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  max-width: 800px;
+}
+#mainbody {
+  height: 100%;
+  width: 100%;
+}
+</style>

@@ -8,7 +8,7 @@ const settingsStore = useSettingsStore();
 </script>
 
 <template>
-  <v-container class="d-flex flex-column justify-center mb-0 pb-0">
+  <v-container id="headerTimers" class="d-flex w-100 flex-column justify-center mb-0 pb-0">
     <TimerCard v-if="settingsStore.showBigTimer"></TimerCard>
     <TimerPanel v-if="settingsStore.showExtraTimer"></TimerPanel>
   </v-container>
