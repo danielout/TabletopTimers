@@ -3,6 +3,8 @@
 import { useDevStore } from '@/devTools/devSettings';
 // Import Script Functions
 import { Player } from '@/logic/playerManagement';
+import { useTheme } from 'vuetify/lib/framework.mjs';
+import { getCurrentTheme } from './logic/themeHelpers';
 // Import our child components
 import HeaderTimers from '@/components/topTimers/HeaderTimers.vue';
 import PlayerTimers from '@/components/playerList/PlayerTimers.vue';
@@ -14,9 +16,20 @@ import About from '@/components/infoScreens/About.vue';
 import { useAppConfigStore } from '@/store/appConfig';
 import { useSettingsStore } from '@/store/settings';
 import { usePlayerStore } from '@/store/players';
+import { useThemeSettingsStore, useThemeListStore } from '@/store/themes';
 const settingsStore = useSettingsStore();
 const playerStore = usePlayerStore();
 const appConfigStore = useAppConfigStore();
+const themeSettingsStore = useThemeSettingsStore();
+const themeListStore = useThemeListStore();
+
+// Add the custom theme definitions to our theme list
+themeListStore.addTheme('Custom Dark', themeSettingsStore.customDarkTheme);
+themeListStore.addTheme('Custom Light', themeSettingsStore.customLightTheme);
+
+// Update the theme to whatever is defined in settings
+const theme = useTheme().global.current.value;
+
 
 // Set the starting window to whatever is defined in settings
 appConfigStore.$patch({ currentWindow: appConfigStore.startingAppScreen });
