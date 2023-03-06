@@ -10,7 +10,6 @@ const themeSettingsStore = useThemeSettingsStore();
 const themeListStore = useThemeListStore();
 const devStore = useDevStore();
 
-
 // Define a type for our preview colors so TypeScript stops fucking complaining
 type ColorPreview = {
   primary: string;
@@ -464,7 +463,10 @@ function updateCustomThemePreview() {
         </v-sheet>
       </v-sheet>
     </v-sheet>
-    <v-expansion-panels variant="accordion" class="px-3 pt-0 ma-0" model-value="settings">
+    <v-expansion-panels
+      variant="accordion"
+      class="px-3 pt-0 ma-0"
+      model-value="settings">
       <v-expansion-panel value="settings">
         <v-expansion-panel-title> Theme Settings </v-expansion-panel-title>
         <v-expansion-panel-text
