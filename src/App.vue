@@ -3,6 +3,7 @@
 import { useDevStore } from '@/devTools/devSettings';
 // Import Script Functions
 import { Player } from '@/logic/playerManagement';
+
 // Import our child components
 import HeaderTimers from '@/components/topTimers/HeaderTimers.vue';
 import PlayerTimers from '@/components/playerList/PlayerTimers.vue';
@@ -15,6 +16,8 @@ import { useAppConfigStore } from '@/store/appConfig';
 import { useSettingsStore } from '@/store/settings';
 import { usePlayerStore } from '@/store/players';
 import { useThemeSettingsStore, useThemeListStore } from '@/store/themes';
+import { useTheme } from 'vuetify/lib/framework.mjs';
+
 const settingsStore = useSettingsStore();
 const playerStore = usePlayerStore();
 const appConfigStore = useAppConfigStore();
@@ -48,6 +51,31 @@ if (import.meta.env.VITE_DEV_MODE) {
 function changeWindow(whatdo: string) {
   appConfigStore.$patch({ currentWindow: whatdo });
 }
+
+// Return what theme type we should use
+function getThemeType(): string {
+  if (settingsStore.themeMode == 'dark') {
+    return 'dark';
+  } else if (settingsStore.themeMode == 'light') {
+    return 'light';
+  } else {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches
+      ? 'dark'
+      : 'light';
+  }
+}
+
+// Return the name of the theme we should currently be using
+function getThemeName(): string {
+  if (getThemeType() == 'dark') {
+    return settingsStore.preferredDarkTheme;
+  } else {
+    return settingsStore.preferredLightTheme;
+  }
+}
+
+// Set the theme to the one we should be using
+useTheme().global.name.value = getThemeName();
 </script>
 
 <template>
@@ -58,7 +86,7 @@ function changeWindow(whatdo: string) {
       <template v-slot:append>
         <v-menu transition="slide-x-reverse-transition">
           <template v-slot:activator="{ props }">
-            <v-btn icon="mdi-dots-vertical" color="primary" v-bind="props">
+            <v-btn icon="mdi-dots-vertical" color="secondary" v-bind="props">
             </v-btn>
           </template>
 
@@ -74,12 +102,17 @@ function changeWindow(whatdo: string) {
       </template>
     </v-app-bar>
     <!-- Main Content Area -->
-    <v-main id="mainbody" class="d-flex flex-column h-100 align-start justify-center">
-      <v-window 
-      id="bodyContent" 
-      v-model="appConfigStore.currentWindow" 
-      class="w-100 h-100 align-center justify-center">
-        <v-window-item id="1" value="Timers" class="align-center justify-center">
+    <v-main
+      id="mainbody"
+      class="d-flex flex-column h-100 align-start justify-center">
+      <v-window
+        id="bodyContent"
+        v-model="appConfigStore.currentWindow"
+        class="w-100 h-100 align-center justify-center">
+        <v-window-item
+          id="1"
+          value="Timers"
+          class="align-center justify-center">
           <v-container
             class="d-flex flex-column h-100 w-100 align-start justify-space-around pa-0 ma-0"
             transition="scroll-x-transition">
@@ -114,7 +147,8 @@ function changeWindow(whatdo: string) {
 </template>
 
 <style>
-html, body {
+html,
+body {
   height: 100%;
   width: 100%;
   display: flex;
@@ -122,7 +156,7 @@ html, body {
   align-items: center;
   justify-content: center;
   margin: 0;
-  padding: 0;  
+  padding: 0;
 }
 #app {
   display: flex;

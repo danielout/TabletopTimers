@@ -25,6 +25,12 @@ export const useSettingsStore = defineStore({
     // Player Timer Display
     forceExpandedTimers: false,
     hideHighligtButtons: false,
+
+    // Theme settings
+    themeMode: 'dark' as 'dark' | 'light' | 'auto',
+    currentMode: 'dark',
+    preferredDarkTheme: 'BluesteelCitadel',
+    preferredLightTheme: 'MintMarauders',
   }),
   getters: {
     warningTriggerMultiplier(): number {

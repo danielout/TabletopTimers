@@ -1,15 +1,16 @@
 // Import logic and type info
 import { ThemeDefinition } from 'vuetify';
 // Import our data
-import { useThemeSettingsStore, useThemeListStore } from '@/store/themes';
-const themeSettings = useThemeSettingsStore();
+import { useThemeListStore } from '@/store/themes';
+import { useSettingsStore } from '@/store/settings';
+const settingsStore = useSettingsStore();
 const themeList = useThemeListStore();
 
 // Return what theme type we should use
 export function getThemeType(): string {
-  if (themeSettings.themeMode == 'dark') {
+  if (settingsStore.themeMode == 'dark') {
     return 'dark';
-  } else if (themeSettings.themeMode == 'light') {
+  } else if (settingsStore.themeMode == 'light') {
     return 'light';
   } else {
     return window.matchMedia('(prefers-color-scheme: dark)').matches
@@ -21,9 +22,9 @@ export function getThemeType(): string {
 // Return the name of the theme we should currently be using
 export function getThemeName(): string {
   if (getThemeType() == 'dark') {
-    return themeSettings.preferredDarkTheme;
+    return settingsStore.preferredDarkTheme;
   } else {
-    return themeSettings.preferredLightTheme;
+    return settingsStore.preferredLightTheme;
   }
 }
 

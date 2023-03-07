@@ -2,31 +2,30 @@
 import { ref, Ref } from 'vue';
 import { ThemeDefinition, useTheme } from 'vuetify';
 import { adjustColor, blendColors } from '@/logic/colorFunctions';
-
+import { getDarkThemeNames, getLightThemeNames } from '@/plugins/vuetifyThemes';
 // Import our store info
 import { useDevStore } from '@/devTools/devSettings';
-import { useThemeSettingsStore, useThemeListStore } from '@/store/themes';
-const themeSettingsStore = useThemeSettingsStore();
-const themeListStore = useThemeListStore();
+import { useSettingsStore } from '@/store/settings';
+const settingsStore = useSettingsStore();
 const devStore = useDevStore();
 
 // Define a type for our preview colors so TypeScript stops fucking complaining
 type ColorPreview = {
+  background: string;
+  surface: string;
   primary: string;
   secondary: string;
-  timerWarning: string;
-  timerDanger: string;
-  accent: string;
-  error: string;
-  info?: string;
-  success?: string;
-  warning?: string;
-  background: string;
-  surface?: string;
   highlight0: string;
   highlight1: string;
   highlight2: string;
   highlight3: string;
+  timerWarning: string;
+  timerDanger: string;
+  error: string;
+  accent?: string;
+  info?: string;
+  success?: string;
+  warning?: string;
   'primary-darken-1'?: string;
   'secondary-darken-1'?: string;
 };
@@ -51,6 +50,9 @@ const dummyColors = {
   'primary-darken-1': '#FFFFFF',
   'secondary-darken-1': '#FFFFFF',
 };
+
+// Grab all our themes from vuetify
+let themeList = useTheme().computedThemes.value;
 
 // Make our preview objects we can manipulate
 let previewTheme: ThemeDefinition = useTheme().current.value;
@@ -115,23 +117,21 @@ function toggleBorderHighlight() {
       borderColor.value = previewColors.value.highlight3;
       break;
     default:
-      borderColor.value = 'none';
+      borderColor.value = previewColors.value.surface;
       break;
   }
 }
 
+// Find the theme in our themeList that matches the themeName and set our previewTheme to it
 function loadThemePreview(themeName: string) {
-  // Get the theme definition from themeListStore that matches themeName
-  const theme: ThemeDefinition | undefined = themeListStore.themes.find(
-    (theme) => theme.name == themeName
-  )?.theme;
+  // find the theme in our themeList object whose key matches themeName
+  const theme: ThemeDefinition | undefined = themeList[themeName];
   if (!theme || !theme.colors) {
     console.error(`Could not find theme ${themeName} in themeListStore`);
     return;
   }
   // Set our preview theme to the theme we found
   previewTheme = theme;
-
   // Set our calculated darker colors
   theme.colors['primary-darken-1'] = adjustColor(
     previewColors.value.primary,
@@ -141,15 +141,19 @@ function loadThemePreview(themeName: string) {
     previewColors.value.secondary,
     -20
   );
-
   // Set isPreviewDark to the theme's dark property
   isPreviewDark.value = theme.dark!;
-
   // Set our preview colors to the colors of the theme we found
   try {
     previewColors.value = theme.colors as ColorPreview;
   } catch (error) {
     console.log('Error loading theme colors: ' + error);
+  }
+  // Set our preferred theme to the theme we found
+  if (isPreviewDark.value) {
+    settingsStore.preferredDarkTheme = themeName;
+  } else {
+    settingsStore.preferredLightTheme = themeName;
   }
 }
 
@@ -157,16 +161,16 @@ function loadThemePreview(themeName: string) {
 let isPreviewDark: Ref<boolean> = ref(previewTheme.dark ?? false);
 
 // Store what our theme is set to
-let selectedDarkTheme: Ref<string> = ref(themeListStore.darkThemeNames[0]);
-let selectedLightTheme: Ref<string> = ref(themeListStore.lightThemeNames[0]);
+let selectedDarkTheme: Ref<string> = ref(settingsStore.preferredDarkTheme);
+let selectedLightTheme: Ref<string> = ref(settingsStore.preferredLightTheme);
 
 // When we change what our default theme type is, load the corresponding theme
 function themeTypeChange() {
-  if (themeSettingsStore.themeMode == 'dark') {
+  if (settingsStore.themeMode == 'dark') {
     loadThemePreview(selectedDarkTheme.value);
     isPreviewDark.value = true;
     isCustomThemeDark.value = true;
-  } else if (themeSettingsStore.themeMode == 'light') {
+  } else if (settingsStore.themeMode == 'light') {
     loadThemePreview(selectedLightTheme.value);
     isPreviewDark.value = false;
     isCustomThemeDark.value = false;
@@ -190,57 +194,13 @@ let selectedColorSlot: Ref<string> = ref('Primary');
 // Is this a dark theme?
 let isCustomThemeDark: Ref<boolean> = ref(isPreviewDark.value);
 // Save the current theme to the user's settings
-function saveCustomTheme() {
-  // We need to construct a theme definition object to save
-  let newCustomTheme: ThemeDefinition = {
-    dark: isCustomThemeDark.value,
-    colors: {
-      primary: previewColors.value.primary,
-      secondary: previewColors.value.secondary,
-      timerWarning: previewColors.value.timerWarning,
-      timerDanger: previewColors.value.timerDanger,
-      accent: previewColors.value.accent,
-      error: previewColors.value.error,
-      info: previewColors.value.info,
-      success: previewColors.value.success,
-      warning: previewColors.value.warning,
-      background: previewColors.value.background,
-      surface: previewColors.value.surface,
-      highlight0: previewColors.value.highlight0,
-      highlight1: previewColors.value.highlight1,
-      highlight2: previewColors.value.highlight2,
-      highlight3: previewColors.value.highlight3,
-      'primary-darken-1': previewColors.value['primary-darken-1'],
-      'secondary-darken-1': previewColors.value['secondary-darken-1'],
-    },
-  };
-  // Set our name based on if it's a dark or light theme
-  let savedName = isCustomThemeDark.value ? 'Custom Dark' : 'Custom Light';
-  // Save it to the correct theme settings slot
-  if (isCustomThemeDark.value) {
-    themeSettingsStore.customDarkTheme = newCustomTheme;
-  } else {
-    themeSettingsStore.customLightTheme = newCustomTheme;
-  }
-  // Overwrite the existing theme in our themeListStore where the name matches our saved name
-  themeListStore.themes = themeListStore.themes.map((theme) => {
-    if (theme.name == savedName) {
-      return {
-        name: savedName,
-        theme: newCustomTheme,
-      };
-    } else {
-      return theme;
-    }
-  });
-}
 
 // Object containing user facing names for our color slots
 const colorSlots: Record<string, string> = {
+  background: 'Background',
+  surface: 'Surface',
   primary: 'Primary',
   secondary: 'Secondary',
-  background: 'Background',
-  accent: 'Accent',
   error: 'Paused',
   highlight0: 'Box Highlight 1',
   highlight1: 'Box Highlight 2',
@@ -248,10 +208,6 @@ const colorSlots: Record<string, string> = {
   highlight3: 'Box Highlight 4',
   timerWarning: 'Timer Warning',
   timerDanger: 'Timer Danger',
-  info: 'Info',
-  success: 'Success',
-  warning: 'Warning',
-  surface: 'Surface',
 };
 
 // Color slot names array for our dropdown
@@ -308,6 +264,15 @@ function updateCustomThemePreview() {
     );
   }
 }
+
+function copyThemeToClip() {
+  let tempTheme: ThemeDefinition = {
+    dark: isCustomThemeDark.value,
+    colors: previewColors.value,
+  };
+  let themeString = JSON.stringify(tempTheme);
+  navigator.clipboard.writeText(themeString);
+}
 </script>
 
 <template>
@@ -315,151 +280,186 @@ function updateCustomThemePreview() {
     <v-sheet class="d-flex justify-center align-center pa-1" color="background">
       <v-sheet
         :elevation="0"
-        class="ma-1 pa-3 rounded-xl"
+        class="ma-1 pa-3 rounded-xl d-flex flex-column align-center justify-center"
         :theme="isPreviewDark ? 'dark' : 'light'"
         :color="previewColors.background">
+        <v-card
+          class="rounded-lg"
+          :color="previewColors.surface"
+          :elevation="6">
+          <v-card-title class="pa-1 d-flex justify-center">
+            25:48
+          </v-card-title>
+          <v-card-text class="pa-1 d-flex justify-center">
+            Last Timer: 02:59
+          </v-card-text>
+          <v-card-actions class="d-flex justify-space-around align-center">
+            <v-btn :color="previewColors.secondary" variant="flat">
+              Reset
+            </v-btn>
+            <v-btn
+              :color="previewColors['secondary-darken-1']"
+              variant="flat"
+              class="w-99">
+              Pause
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+        <v-container
+          class="d-flex flex-row justify-space-around w-80 align-center pa-0 mt-2 mb-2">
+          <v-btn size="small" :color="previewColors.primary" class="w-40">
+            Reset All
+          </v-btn>
+          <v-btn size="small" :color="previewColors.primary" class="w-40">
+            Pause All
+          </v-btn>
+        </v-container>
         <v-sheet
           width="100%"
-          :elevation="6"
+          :elevation="2"
           class="pa-0 ma-0"
           :color="borderColor"
           rounded="lg"
           :border="borderColor != 'none' ? 'lg opacity-12' : 'lg opacity-0'">
-          <v-card
-            class="rounded-lg"
-            :color="previewColors.primary"
-            :elevation="2">
-            <v-card-title>
-              <v-sheet
-                color="transparent"
-                class="d-flex pa-0 ma-0 justify-space-between align-center">
-                <span>Theme Preview</span>
-                <v-btn
-                  :color="previewColors.secondary"
-                  variant="flat"
-                  size="small">
-                  Button!
-                </v-btn>
-              </v-sheet>
-            </v-card-title>
-            <v-card-subtitle>
-              <v-container
-                class="d-flex justify-space-between align-center pa-0 ma-0">
+          <v-expansion-panels class="mb-1" modal-value="preview">
+            <v-expansion-panel
+              :bg-color="previewColors.primary"
+              value="preview">
+              <v-expansion-panel-title :color="previewColors.primary">
                 <v-container
-                  class="d-flex justify-space-between align-center pa-0 ma-0 mr-1 w-100">
+                  class="d-flex justify-space-between align-center pa-0 ma-0">
+                  <span>
+                    <v-sheet
+                      class="pa-1 rounded"
+                      :color="previewColors.timerWarning">
+                      Player Name
+                    </v-sheet>
+                  </span>
+                  <v-container class="d-flex align-center pa-0 ma-0 w-auto">
+                    <span
+                      class="font-weight-bold"
+                      :style="'color: ' + previewColors.timerWarning">
+                      15</span
+                    >:<span
+                      class="font-weight-bold"
+                      :style="'color: ' + previewColors.timerDanger"
+                      >11
+                    </span>
+
+                    <span class="px-1">
+                      <v-btn
+                        :color="previewColors.secondary"
+                        icon="mdi-refresh"
+                        size="x-small">
+                      </v-btn>
+                    </span>
+                    <v-btn
+                      :color="previewColors['secondary-darken-1']"
+                      icon="mdi-pause"
+                      size="x-small">
+                    </v-btn>
+                    <span class="ml-1">
+                      <v-btn
+                        :color="previewColors.error"
+                        icon="mdi-play"
+                        size="x-small">
+                      </v-btn>
+                    </span>
+                  </v-container>
+                </v-container>
+              </v-expansion-panel-title>
+              <v-expansion-panel-text>
+                <v-container
+                  class="d-flex flex-column align-center justify-center pa-0 ma-0 w-100">
+                  <v-container
+                    class="pa-0 ma-0 d-flex justify-space-between w-100">
+                    <span class="w-100">Last Timer:</span>
+                    <span>45:13</span>
+                  </v-container>
+                  <v-divider width="75%" thickness="2"></v-divider>
+                  <v-container
+                    class="pa-0 ma-0 d-flex flex-column justify-space-between align-center w-100">
+                    <div class="text-caption">Reminder Highlight Color:</div>
+                  </v-container>
                   <v-sheet
-                    class="pa-1 rounded-sm"
-                    :color="previewColors.timerWarning">
-                    Player
+                    class="d-flex justify-space-around align-center pa-1 rounded"
+                    color="transparent">
+                    <v-btn-toggle
+                      density="compact"
+                      rounded="xl"
+                      v-model:model-value="highlightColor"
+                      @update:model-value="toggleBorderHighlight()">
+                      <v-btn
+                        :style="'background-color: ' + previewColors.surface">
+                        <v-icon
+                          size="x-large"
+                          :color="previewColors.highlight0"
+                          icon="mdi-circle">
+                        </v-icon>
+                      </v-btn>
+                      <v-btn
+                        :style="'background-color: ' + previewColors.surface">
+                        <v-icon
+                          size="x-large"
+                          :color="previewColors.highlight1"
+                          icon="mdi-circle">
+                        </v-icon>
+                      </v-btn>
+                      <v-btn
+                        :style="'background-color: ' + previewColors.surface">
+                        <v-icon
+                          size="x-large"
+                          :color="previewColors.highlight2"
+                          icon="mdi-circle">
+                        </v-icon>
+                      </v-btn>
+                      <v-btn
+                        :style="'background-color: ' + previewColors.surface">
+                        <v-icon
+                          size="x-large"
+                          :color="previewColors.highlight3"
+                          icon="mdi-circle">
+                        </v-icon>
+                      </v-btn>
+                    </v-btn-toggle>
                   </v-sheet>
-                  <span
-                    class="font-weight-bold"
-                    :style="'color: ' + previewColors.timerWarning"
-                    >03:42</span
-                  >
+                  <v-divider class="mt-1"></v-divider>
+                  <v-sheet
+                    color="transparent"
+                    class="d-flex align-center justify-center mb-1 rounded-lg">
+                    <v-icon
+                      size="x-small"
+                      :color="previewColors.timerWarning"
+                      icon="mdi-circle">
+                    </v-icon>
+                    <span class="px-1" :style="'color: ' + warningCycledColor"
+                      >Timer Warning Gradient Demo</span
+                    >
+                    <v-icon
+                      size="x-small"
+                      :color="previewColors.timerDanger"
+                      icon="mdi-circle">
+                    </v-icon>
+                  </v-sheet>
+                  <v-sheet
+                    :color="warningCycledColor"
+                    class="d-flex align-center justify-center rounded-lg">
+                    <v-icon
+                      size="x-small"
+                      :color="previewColors.timerWarning"
+                      icon="mdi-circle">
+                    </v-icon>
+                    <span class="px-1">Timer Warning Gradient Demo</span>
+                    <v-icon
+                      size="x-small"
+                      :color="previewColors.timerDanger"
+                      icon="mdi-circle">
+                    </v-icon>
+                  </v-sheet>
                 </v-container>
-                <v-container
-                  class="d-flex justify-space-around align-center pa-0 ma-0 w-auto">
-                  <v-btn
-                    :color="previewColors.secondary"
-                    icon="mdi-refresh"
-                    size="x-small">
-                  </v-btn>
-                  <v-divider vertical class="mx-1"></v-divider>
-                  <v-btn
-                    :color="previewColors['secondary-darken-1']"
-                    icon="mdi-pause"
-                    size="x-small">
-                  </v-btn>
-                  <v-divider vertical class="mx-1"></v-divider>
-                  <v-btn
-                    :color="previewColors.error"
-                    icon="mdi-play"
-                    size="x-small">
-                  </v-btn>
-                </v-container>
-              </v-container>
-            </v-card-subtitle>
-            <v-divider class="mt-1"></v-divider>
-            <v-card-text class="pa-0 ma-0">
-              <v-sheet
-                class="pa-1 rounded"
-                :color="previewColors['primary-darken-1']">
-                <span>Details text box text</span>
-                <v-sheet
-                  class="d-flex justify-space-around align-center pa-1 rounded"
-                  color="transparent">
-                  <v-btn-toggle
-                    density="compact"
-                    rounded="xl"
-                    v-model:model-value="highlightColor"
-                    @update:model-value="toggleBorderHighlight()">
-                    <v-btn>
-                      <v-icon
-                        size="x-large"
-                        :color="previewColors.highlight0"
-                        icon="mdi-circle">
-                      </v-icon>
-                    </v-btn>
-                    <v-btn>
-                      <v-icon
-                        size="x-large"
-                        :color="previewColors.highlight1"
-                        icon="mdi-circle">
-                      </v-icon>
-                    </v-btn>
-                    <v-btn>
-                      <v-icon
-                        size="x-large"
-                        :color="previewColors.highlight2"
-                        icon="mdi-circle">
-                      </v-icon>
-                    </v-btn>
-                    <v-btn>
-                      <v-icon
-                        size="x-large"
-                        :color="previewColors.highlight3"
-                        icon="mdi-circle">
-                      </v-icon>
-                    </v-btn>
-                  </v-btn-toggle>
-                </v-sheet>
-                <v-divider class="mt-1"></v-divider>
-                <v-sheet
-                  color="transparent"
-                  class="d-flex align-center justify-center mb-1 rounded-lg">
-                  <v-icon
-                    size="x-small"
-                    :color="previewColors.timerWarning"
-                    icon="mdi-circle">
-                  </v-icon>
-                  <span class="px-1" :style="'color: ' + warningCycledColor"
-                    >Timer Warning Gradient Demo</span
-                  >
-                  <v-icon
-                    size="x-small"
-                    :color="previewColors.timerDanger"
-                    icon="mdi-circle">
-                  </v-icon>
-                </v-sheet>
-                <v-sheet
-                  :color="warningCycledColor"
-                  class="d-flex align-center justify-center rounded-lg">
-                  <v-icon
-                    size="x-small"
-                    :color="previewColors.timerWarning"
-                    icon="mdi-circle">
-                  </v-icon>
-                  <span class="px-1">Timer Warning Gradient Demo</span>
-                  <v-icon
-                    size="x-small"
-                    :color="previewColors.timerDanger"
-                    icon="mdi-circle">
-                  </v-icon>
-                </v-sheet>
-              </v-sheet>
-            </v-card-text>
-          </v-card>
+              </v-expansion-panel-text>
+            </v-expansion-panel>
+          </v-expansion-panels>
         </v-sheet>
       </v-sheet>
     </v-sheet>
@@ -476,7 +476,7 @@ function updateCustomThemePreview() {
             density="compact"
             rounded="xl"
             class="mb-1"
-            v-model:model-value="themeSettingsStore.themeMode"
+            v-model:model-value="settingsStore.themeMode"
             @update:model-value="themeTypeChange">
             <v-btn value="dark">Dark</v-btn>
             <v-btn value="auto">Auto</v-btn>
@@ -484,54 +484,61 @@ function updateCustomThemePreview() {
           </v-btn-toggle>
           <v-select
             class="flex-grow-1"
-            :items="themeListStore.lightThemeNames"
+            :items="getLightThemeNames()"
             label="Select a light theme"
             v-model:model-value="selectedLightTheme"
             @update:model-value="loadThemePreview">
           </v-select>
           <v-select
             class="flex-grow-1"
-            :items="themeListStore.darkThemeNames"
+            :items="getDarkThemeNames()"
             label="Select a dark theme"
             v-model:model-value="selectedDarkTheme"
             @update:model-value="loadThemePreview">
           </v-select>
         </v-expansion-panel-text>
       </v-expansion-panel>
-      <v-expansion-panel :style="devStore.devMode ? '' : 'display: none'">
-        <v-expansion-panel-title> Custom Theme Editor </v-expansion-panel-title>
-        <v-expansion-panel-text
-          class="d-flex flex-column justify-center align-center">
-          <v-sheet
-            class="pa-0 ma-0 d-flex justify-space-between align-center"
-            color="transparent">
-            <v-btn density="compact" @click="saveCustomTheme">Save</v-btn>
-            <v-btn class="mx-1" density="compact" disabled>Export</v-btn>
-            <v-btn density="compact" disabled>Import</v-btn>
-          </v-sheet>
-          <v-switch
-            hide-details="auto"
-            density="compact"
-            label="Dark Theme"
-            v-model:model-value="isCustomThemeDark"
-            @update:model-value="isPreviewDark = isCustomThemeDark">
-            <template #prepend>
-              <span>Light Theme</span>
-            </template>
-          </v-switch>
-          <v-select
-            density="compact"
-            :items="colorSlotNames"
-            label="Select a color slot"
-            v-model:model-value="selectedColorSlot"
-            @update:model-value="colorSlotChange">
-          </v-select>
-          <v-color-picker
-            v-model:model-value="selectedColorSlotColor"
-            @update:model-value="updateCustomThemePreview()">
-          </v-color-picker>
-        </v-expansion-panel-text>
-      </v-expansion-panel>
+      <div
+        :style="devStore.devMode ? '' : 'display: none'"
+        class="pa-0 ma-0 w-100">
+        <v-expansion-panel :style="devStore.devMode ? '' : 'display: none'">
+          <v-expansion-panel-title>
+            Custom Theme Editor
+          </v-expansion-panel-title>
+          <v-expansion-panel-text
+            class="d-flex flex-column justify-center align-center">
+            <v-sheet
+              class="pa-0 ma-0 d-flex flex-column justify-space-between align-center">
+              <v-switch
+                hide-details="auto"
+                density="compact"
+                label="Dark Theme"
+                v-model:model-value="isCustomThemeDark"
+                @update:model-value="isPreviewDark = isCustomThemeDark">
+                <template #prepend>
+                  <span>Light Theme</span>
+                </template>
+              </v-switch>
+              <v-select
+                density="compact"
+                :items="colorSlotNames"
+                class="w-100"
+                label="Select a color slot"
+                v-model:model-value="selectedColorSlot"
+                @update:model-value="colorSlotChange">
+              </v-select>
+              <v-color-picker
+                mode="hexa"
+                v-model:model-value="selectedColorSlotColor"
+                @update:model-value="updateCustomThemePreview()">
+              </v-color-picker>
+              <v-btn class="mt-2 mb-1" @click="copyThemeToClip()">
+                Copy Datastructure
+              </v-btn>
+            </v-sheet>
+          </v-expansion-panel-text>
+        </v-expansion-panel>
+      </div>
     </v-expansion-panels>
   </v-container>
 </template>
