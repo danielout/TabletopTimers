@@ -51,6 +51,24 @@ export const useSettingsStore = defineStore({
           return -1;
       }
     },
+    getThemeType(): string {
+      if (this.themeMode == 'dark') {
+        return 'dark';
+      } else if (this.themeMode == 'light') {
+        return 'light';
+      } else {
+        return window.matchMedia('(prefers-color-scheme: dark)').matches
+          ? 'dark'
+          : 'light';
+      }
+    },
+    getThemeName(): string {
+      if (this.getThemeType == 'dark') {
+        return this.preferredDarkTheme;
+      } else {
+        return this.preferredLightTheme;
+      }
+    },
   },
   actions: {
     exceedsWarningThreshold(average: number, timer: number): boolean {

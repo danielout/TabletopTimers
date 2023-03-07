@@ -3,7 +3,7 @@
 import { useDevStore } from '@/devTools/devSettings';
 // Import Script Functions
 import { Player } from '@/logic/playerManagement';
-
+import { ref, watch } from 'vue';
 // Import our child components
 import HeaderTimers from '@/components/topTimers/HeaderTimers.vue';
 import PlayerTimers from '@/components/playerList/PlayerTimers.vue';
@@ -15,18 +15,10 @@ import About from '@/components/infoScreens/About.vue';
 import { useAppConfigStore } from '@/store/appConfig';
 import { useSettingsStore } from '@/store/settings';
 import { usePlayerStore } from '@/store/players';
-import { useThemeSettingsStore, useThemeListStore } from '@/store/themes';
 import { useTheme } from 'vuetify/lib/framework.mjs';
-
 const settingsStore = useSettingsStore();
 const playerStore = usePlayerStore();
 const appConfigStore = useAppConfigStore();
-const themeSettingsStore = useThemeSettingsStore();
-const themeListStore = useThemeListStore();
-
-// Add the custom theme definitions to our theme list
-themeListStore.addTheme('Custom Dark', themeSettingsStore.customDarkTheme);
-themeListStore.addTheme('Custom Light', themeSettingsStore.customLightTheme);
 
 // Set the starting window to whatever is defined in settings
 appConfigStore.$patch({ currentWindow: appConfigStore.startingAppScreen });
@@ -52,40 +44,19 @@ function changeWindow(whatdo: string) {
   appConfigStore.$patch({ currentWindow: whatdo });
 }
 
-// Return what theme type we should use
-function getThemeType(): string {
-  if (settingsStore.themeMode == 'dark') {
-    return 'dark';
-  } else if (settingsStore.themeMode == 'light') {
-    return 'light';
-  } else {
-    return window.matchMedia('(prefers-color-scheme: dark)').matches
-      ? 'dark'
-      : 'light';
+const theme = useTheme();
+const desiredTheme = ref(settingsStore.getThemeName);
+// Set the theme to whatever is defined in settings
+theme.global.name.value = desiredTheme.value;
+// watch for changes to desiredThem, and update the theme if it changes
+watch(
+  () => settingsStore.getThemeName,
+  (newTheme: string) => {
+    theme.global.name.value = newTheme;
   }
-}
-
-// Return the name of the theme we should currently be using
-function getThemeName(): string {
-  if (getThemeType() == 'dark') {
-    return settingsStore.preferredDarkTheme;
-  } else {
-    return settingsStore.preferredLightTheme;
-  }
-}
-// Go ahead and store the current theme name, since we can't call useTheme in a function? 
-let currentTheme = useTheme().global.name.value;
-
-// Every 0.5 seconds, check if the theme has changed, and if so, update it.
-setInterval(() => {
-  if (currentTheme != getThemeName()) {
-    currentTheme = getThemeName();
-    useTheme().global.name.value = currentTheme;
-  }
-}, 500);
-
-
+);
 </script>
+
 
 <template>
   <v-app>
