@@ -73,9 +73,18 @@ function getThemeName(): string {
     return settingsStore.preferredLightTheme;
   }
 }
+// Go ahead and store the current theme name, since we can't call useTheme in a function? 
+let currentTheme = useTheme().global.name.value;
 
-// Set the theme to the one we should be using
-useTheme().global.name.value = getThemeName();
+// Every 0.5 seconds, check if the theme has changed, and if so, update it.
+setInterval(() => {
+  if (currentTheme != getThemeName()) {
+    currentTheme = getThemeName();
+    useTheme().global.name.value = currentTheme;
+  }
+}, 500);
+
+
 </script>
 
 <template>
