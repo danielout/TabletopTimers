@@ -42,12 +42,12 @@ function togglePause() {
     </v-card-text>
 
     <v-card-actions class="d-flex justify-space-around align-center">
-      <v-btn @click="doReset" color="secondary" variant="outlined">
+      <v-btn @click="doReset" color="secondary" variant="flat">
         Reset
       </v-btn>
       <v-btn
         :color="isPaused ? 'error' : 'secondary-darken-1'"
-        variant="outlined"
+        variant="flat"
         @click="togglePause"
         class="w-99">
         {{ isPaused ? 'Resume' : 'Pause' }}
