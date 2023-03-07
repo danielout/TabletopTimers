@@ -1,3 +1,11 @@
+/* Player Panel
+  This is the individual expansion panel for a player. It should try to handle all the logic for what we need to do for a single player - just keeps it clean to keep it here. 
+  TODO LIST:
+  - Delete player button.
+  - Toggle off the highlight color buttons if people don't want them.
+  - Add option for a countdown timer on each player card.
+    - Countdown timer needs a good way to notify.
+*/
 <script setup lang="ts">
 // Import logic bits
 import { defineProps, ref, Ref } from 'vue';
@@ -6,6 +14,8 @@ import { Player } from '@/logic/playerManagement';
 // Import and assign our state management
 import { usePlayerStore } from '@/store/players';
 import { useSettingsStore } from '@/store/settings';
+import { blendColors } from '@/logic/colorFunctions';
+import { useTheme } from 'vuetify/lib/framework.mjs';
 const playerStore = usePlayerStore();
 const settingsStore = useSettingsStore();
 
@@ -23,6 +33,8 @@ thisPlayer.actionTimer.addEventListener('secondsUpdated', function () {
     .toString(['minutes', 'seconds']);
 });
 
+
+// Border highlighting options
 let highlightColor: Ref<string | number> = ref('none');
 let borderColor: Ref<string> = ref('none');
 
@@ -98,6 +110,34 @@ function disableWarning() {
   mediumWarning.value = false;
   highWarning.value = false;
 }
+
+// If the user has scaledWarnings enabled, we need to scale the color of the warning based on how much over the average the player is
+const scaledWarningEnabled = ref(settingsStore.enabledScaledWarnings);
+let scaledWarningColor: Ref<string> = ref('none');
+let lowWarningColor = ref(useTheme().current.value.colors.timerWarning);
+let highWarningColor = ref(useTheme().current.value.colors.timerDanger);
+// Go ahead and updated the scaledWarningColor every second, so it is ready when we need it
+// TODO: At some point I neeed to collapse all the warning logic down to something cleaner.
+setInterval(() => {
+  if (!scaledWarningEnabled.value) {
+    return;
+  }
+  if (!settingsStore.exceedsWarningThreshold(
+      playerStore.averageActionTimer([]),
+      thisPlayer.actionTimerSeconds
+    )) {
+      return;
+    }
+  scaledWarningColor.value = blendColors(
+    lowWarningColor.value,
+    highWarningColor.value,
+    settingsStore.warningThresholdSeverity(
+      playerStore.averageActionTimer([]),
+      thisPlayer.actionTimerSeconds)
+  );
+}, 1000);
+
+
 </script>
 
 <template>
@@ -108,15 +148,16 @@ function disableWarning() {
     rounded="lg"
     :border="borderColor != 'none' ? 'lg opacity-12' : 'lg opacity-0'">
     <v-expansion-panel bg-color="primary">
-      <v-expansion-panel-title :color="highWarning ? 'error' : 'primary'">
+      <v-expansion-panel-title :color="highWarning ? (scaledWarningEnabled ? scaledWarningColor : 'error') : 'primary'">
         <v-container
           class="d-flex justify-space-between align-center pa-0 ma-0">
           <span>{{ thisPlayer.name }}</span>
           <v-container class="d-flex align-center pa-0 ma-0 w-auto">
             <v-sheet
               class="pa-1 rounded"
-              :color="mediumWarning ? 'error' : 'primary'">
-              <span :class="lowWarning ? 'font-weight-bold text-warning' : ''">
+              :color="mediumWarning ? (scaledWarningEnabled ? scaledWarningColor : 'error') : 'transparent'">
+              <span :class="lowWarning ? 'font-weight-bold text-warning' : ''"
+              :style="lowWarning ? 'color: ' + (scaledWarningEnabled ? scaledWarningColor : lowWarningColor) : ''">
                 {{ thisPlayer.actionTimerString }}
               </span>
             </v-sheet>

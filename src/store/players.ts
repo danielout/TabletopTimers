@@ -104,5 +104,6 @@ export const usePlayerStore = defineStore({
       });
       return total / count;
     },
+    
   },
 });

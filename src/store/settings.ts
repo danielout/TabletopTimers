@@ -13,21 +13,22 @@ export const useSettingsStore = defineStore({
     warningsRelative: true,
     warningRelativeThreshold: 150,
     warningAbsoluteThreshold: 5,
-    warningIntensityString: 'low', // low, medium, high
-    minWarningTime: 15,
+    warningIntensityString: 'medium', // low, medium, high
+    minWarningTime: 30,
+    enabledScaledWarnings: true,
 
     // Player Sorting
     enableAutoSort: true,
-    sortPlayersBy: 'name', // name, actionTimer, id
+    sortPlayersBy: 'actionTimer', // name, actionTimer, id
     pausedOnBottom: true,
     reverseSort: false,
 
     // Player Timer Display
     forceExpandedTimers: false,
-    hideHighligtButtons: false,
+    hideHighlightButtons: false,
 
     // Theme settings
-    themeMode: 'dark' as 'dark' | 'light' | 'auto',
+    themeMode: 'auto' as 'dark' | 'light' | 'auto',
     currentMode: 'dark',
     preferredDarkTheme: 'BluesteelCitadel',
     preferredLightTheme: 'MintMarauders',
