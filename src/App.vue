@@ -57,7 +57,6 @@ watch(
 );
 </script>
 
-
 <template>
   <v-app>
     <!-- Top Application Bar -->

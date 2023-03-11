@@ -1,11 +1,9 @@
-/* Player Panel
-  This is the individual expansion panel for a player. It should try to handle all the logic for what we need to do for a single player - just keeps it clean to keep it here. 
-  TODO LIST:
-  - Delete player button.
-  - Toggle off the highlight color buttons if people don't want them.
-  - Add option for a countdown timer on each player card.
-    - Countdown timer needs a good way to notify.
-*/
+/* Player Panel This is the individual expansion panel for a player. It should
+try to handle all the logic for what we need to do for a single player - just
+keeps it clean to keep it here. TODO LIST: - Delete player button. - Toggle off
+the highlight color buttons if people don't want them. - Add option for a
+countdown timer on each player card. - Countdown timer needs a good way to
+notify. */
 <script setup lang="ts">
 // Import logic bits
 import { defineProps, ref, Ref } from 'vue';
@@ -32,7 +30,6 @@ thisPlayer.actionTimer.addEventListener('secondsUpdated', function () {
     .getTimeValues()
     .toString(['minutes', 'seconds']);
 });
-
 
 // Border highlighting options
 let highlightColor: Ref<string | number> = ref('none');
@@ -122,22 +119,23 @@ setInterval(() => {
   if (!scaledWarningEnabled.value) {
     return;
   }
-  if (!settingsStore.exceedsWarningThreshold(
+  if (
+    !settingsStore.exceedsWarningThreshold(
       playerStore.averageActionTimer([]),
       thisPlayer.actionTimerSeconds
-    )) {
-      return;
-    }
+    )
+  ) {
+    return;
+  }
   scaledWarningColor.value = blendColors(
     lowWarningColor.value,
     highWarningColor.value,
     settingsStore.warningThresholdSeverity(
       playerStore.averageActionTimer([]),
-      thisPlayer.actionTimerSeconds)
+      thisPlayer.actionTimerSeconds
+    )
   );
 }, 1000);
-
-
 </script>
 
 <template>
@@ -148,16 +146,37 @@ setInterval(() => {
     rounded="lg"
     :border="borderColor != 'none' ? 'lg opacity-12' : 'lg opacity-0'">
     <v-expansion-panel bg-color="primary">
-      <v-expansion-panel-title :color="highWarning ? (scaledWarningEnabled ? scaledWarningColor : 'error') : 'primary'">
+      <v-expansion-panel-title
+        :color="
+          highWarning
+            ? scaledWarningEnabled
+              ? scaledWarningColor
+              : 'error'
+            : 'primary'
+        ">
         <v-container
           class="d-flex justify-space-between align-center pa-0 ma-0">
           <span>{{ thisPlayer.name }}</span>
           <v-container class="d-flex align-center pa-0 ma-0 w-auto">
             <v-sheet
               class="pa-1 rounded"
-              :color="mediumWarning ? (scaledWarningEnabled ? scaledWarningColor : 'error') : 'transparent'">
-              <span :class="lowWarning ? 'font-weight-bold text-warning' : ''"
-              :style="lowWarning ? 'color: ' + (scaledWarningEnabled ? scaledWarningColor : lowWarningColor) : ''">
+              :color="
+                mediumWarning
+                  ? scaledWarningEnabled
+                    ? scaledWarningColor
+                    : 'error'
+                  : 'transparent'
+              ">
+              <span
+                :class="lowWarning ? 'font-weight-bold text-warning' : ''"
+                :style="
+                  lowWarning
+                    ? 'color: ' +
+                      (scaledWarningEnabled
+                        ? scaledWarningColor
+                        : lowWarningColor)
+                    : ''
+                ">
                 {{ thisPlayer.actionTimerString }}
               </span>
             </v-sheet>

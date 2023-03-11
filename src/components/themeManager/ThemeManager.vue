@@ -7,7 +7,7 @@ import { getDarkThemeNames, getLightThemeNames } from '@/plugins/vuetifyThemes';
 import { useSettingsStore } from '@/store/settings';
 const settingsStore = useSettingsStore();
 
-const devMode = import.meta.env.VITE_DEV_MODE
+const devMode = import.meta.env.VITE_DEV_MODE;
 
 // Define a type for our preview colors so TypeScript stops fucking complaining
 type ColorPreview = {
@@ -498,9 +498,7 @@ function copyThemeToClip() {
           </v-select>
         </v-expansion-panel-text>
       </v-expansion-panel>
-      <div
-        :style="devMode ? '' : 'display: none'"
-        class="pa-0 ma-0 w-100">
+      <div :style="devMode ? '' : 'display: none'" class="pa-0 ma-0 w-100">
         <v-expansion-panel :style="devMode ? '' : 'display: none'">
           <v-expansion-panel-title>
             Custom Theme Editor
