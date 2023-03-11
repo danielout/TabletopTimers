@@ -25,7 +25,10 @@ export const usePlayerStore = defineStore({
   actions: {
     // Add a new player to the list
     addPlayer(name: string) {
-      const newPlayer = new Player(this.playerCount, name);
+      // Find the highest value of the 'id' property in the array of players
+      const highestId = Math.max(...this.players.map((player) => player.id));
+      // Create a new player with the next highest id
+      const newPlayer = new Player(highestId + 1, name);
       this.players.push(newPlayer);
     },
     // Remove a player from the list
@@ -104,6 +107,6 @@ export const usePlayerStore = defineStore({
       });
       return total / count;
     },
-    
   },
+  persist: true,
 });
