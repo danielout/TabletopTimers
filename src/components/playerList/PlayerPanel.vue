@@ -25,7 +25,6 @@ thisPlayer.actionTimer.addEventListener('secondsUpdated', function () {
     .toString(['minutes', 'seconds']);
 });
 
-
 // Border highlighting options
 let highlightColor: Ref<string | number> = ref('none');
 let borderColor: Ref<string> = ref('none');
@@ -132,7 +131,6 @@ setInterval(() => {
   );
 }, 1000);
 
-
 // Controls for removing a player - we want to be sure people want to do this.
 const deleteMode = ref(false);
 
@@ -151,7 +149,6 @@ function deletePlayer() {
 function cancelDeletePlayer() {
   deleteMode.value = false;
 }
-
 </script>
 
 <template>
@@ -253,26 +250,24 @@ function cancelDeletePlayer() {
           <v-container
             class="pa-0 pt-1 ma-0 mb-1 d-flex justify-space-between align-center w-100">
             <v-btn
-            size="small"
-            density="comfortable"
-      rounded="pill"
-      color="secondary"
-      :hidden="!deleteMode"
-      @click="cancelDeletePlayer()"
-    >
-    <v-icon left>mdi-trash-can</v-icon>
-      Cancel
-    </v-btn>
-    <v-btn 
-            size="small"
-            density="comfortable"
-      rounded="pill"
-      color="error"
-      @click="deletePlayer()"
-    >
-    <v-icon left>mdi-trash-can</v-icon>
-      Delete Player
-    </v-btn>
+              size="small"
+              density="comfortable"
+              rounded="pill"
+              color="secondary"
+              :hidden="!deleteMode"
+              @click="cancelDeletePlayer()">
+              <v-icon left>mdi-trash-can</v-icon>
+              Cancel
+            </v-btn>
+            <v-btn
+              size="small"
+              density="comfortable"
+              rounded="pill"
+              color="error"
+              @click="deletePlayer()">
+              <v-icon left>mdi-trash-can</v-icon>
+              Delete Player
+            </v-btn>
           </v-container>
         </v-container>
       </v-expansion-panel-text>

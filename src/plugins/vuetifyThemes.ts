@@ -115,11 +115,84 @@ const BluesteelCitadel: ThemeDefinition = {
 };
 
 const Lysithia: ThemeDefinition = {
-  "dark":true,"colors":{"background":"#20041E","surface":"#332E31CF","surface-variant":"#BDBDBD","on-surface-variant":"#424242","primary":"#3A0101","primary-darken-1":"#260000","secondary":"#921890","secondary-darken-1":"#7e047c","error":"#B42727","info":"#2196F3","success":"#4CAF50","warning":"#FB8C00","highlight0":"#E41414","highlight1":"#D70FE2","highlight2":"#8BE625","highlight3":"#FDCE65","timerWarning":"#B92BB9","timerDanger":"#D33232","on-background":"#fff","on-surface":"#fff","on-primary":"#fff","on-primary-darken-1":"#fff","on-secondary":"#fff","on-secondary-darken-1":"#fff","on-error":"#000","on-info":"#fff","on-success":"#fff","on-warning":"#fff","on-highlight0":"#fff","on-highlight1":"#000","on-highlight2":"#000","on-highlight3":"#fff","on-timerWarning":"#fff","on-timerDanger":"#fff"}
-}
+  dark: true,
+  colors: {
+    background: '#20041E',
+    surface: '#332E31CF',
+    'surface-variant': '#BDBDBD',
+    'on-surface-variant': '#424242',
+    primary: '#3A0101',
+    'primary-darken-1': '#260000',
+    secondary: '#921890',
+    'secondary-darken-1': '#7e047c',
+    error: '#B42727',
+    info: '#2196F3',
+    success: '#4CAF50',
+    warning: '#FB8C00',
+    highlight0: '#E41414',
+    highlight1: '#D70FE2',
+    highlight2: '#8BE625',
+    highlight3: '#FDCE65',
+    timerWarning: '#B92BB9',
+    timerDanger: '#D33232',
+    'on-background': '#fff',
+    'on-surface': '#fff',
+    'on-primary': '#fff',
+    'on-primary-darken-1': '#fff',
+    'on-secondary': '#fff',
+    'on-secondary-darken-1': '#fff',
+    'on-error': '#000',
+    'on-info': '#fff',
+    'on-success': '#fff',
+    'on-warning': '#fff',
+    'on-highlight0': '#fff',
+    'on-highlight1': '#000',
+    'on-highlight2': '#000',
+    'on-highlight3': '#fff',
+    'on-timerWarning': '#fff',
+    'on-timerDanger': '#fff',
+  },
+};
 
-const Kristov: ThemeDefinition = {"dark":false,"colors":{"background":"#3B3B3B","surface":"#77A0A2","surface-variant":"#BDBDBD","on-surface-variant":"#424242","primary":"#7DF9FF","primary-darken-1":"#69e5eb","secondary":"#F7F648","secondary-darken-1":"#e3e234","error":"#FD7A62","info":"#2196F3","success":"#4CAF50","warning":"#FB8C00","highlight0":"#B92929","highlight1":"#2BFF8B","highlight2":"#3C27A3","highlight3":"#F070D1","timerWarning":"#D37109","timerDanger":"#F1195C","on-background":"#fff","on-surface":"#fff","on-primary":"#fff","on-primary-darken-1":"#fff","on-secondary":"#fff","on-secondary-darken-1":"#fff","on-error":"#000","on-info":"#fff","on-success":"#fff","on-warning":"#fff","on-highlight0":"#fff","on-highlight1":"#000","on-highlight2":"#000","on-highlight3":"#fff","on-timerWarning":"#fff","on-timerDanger":"#fff"}}
-
+const Kristov: ThemeDefinition = {
+  dark: false,
+  colors: {
+    background: '#3B3B3B',
+    surface: '#77A0A2',
+    'surface-variant': '#BDBDBD',
+    'on-surface-variant': '#424242',
+    primary: '#7DF9FF',
+    'primary-darken-1': '#69e5eb',
+    secondary: '#F7F648',
+    'secondary-darken-1': '#e3e234',
+    error: '#FD7A62',
+    info: '#2196F3',
+    success: '#4CAF50',
+    warning: '#FB8C00',
+    highlight0: '#B92929',
+    highlight1: '#2BFF8B',
+    highlight2: '#3C27A3',
+    highlight3: '#F070D1',
+    timerWarning: '#D37109',
+    timerDanger: '#F1195C',
+    'on-background': '#fff',
+    'on-surface': '#fff',
+    'on-primary': '#fff',
+    'on-primary-darken-1': '#fff',
+    'on-secondary': '#fff',
+    'on-secondary-darken-1': '#fff',
+    'on-error': '#000',
+    'on-info': '#fff',
+    'on-success': '#fff',
+    'on-warning': '#fff',
+    'on-highlight0': '#fff',
+    'on-highlight1': '#000',
+    'on-highlight2': '#000',
+    'on-highlight3': '#fff',
+    'on-timerWarning': '#fff',
+    'on-timerDanger': '#fff',
+  },
+};
 
 // Make sure this is at the bottom of the file so that the themes are defined before they are used. You know, like a smart person would.
 export const definedThemes: ThemeRecord = {
@@ -129,7 +202,7 @@ export const definedThemes: ThemeRecord = {
   CherubChasers,
   BluesteelCitadel,
   Lysithia,
-  Kristov
+  Kristov,
 };
 
 // Retreive a theme by name

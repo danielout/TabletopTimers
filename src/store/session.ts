@@ -37,7 +37,7 @@ export const useSessionStore = defineStore({
     // Getters go here
   },
   actions: {
-    // Start new session copies the current to the previous. If we have an existing players array, we'll use that. 
+    // Start new session copies the current to the previous. If we have an existing players array, we'll use that.
     startNewSession(currentPlayers?: Player[]) {
       // Copy the current session to the previous session
       this.PreviousSession = this.CurrentSession;
@@ -135,7 +135,10 @@ export const useSessionStore = defineStore({
       }
     },
     // Scene timer calculator - no need to care about the id.
-    getSceneTimerData(whichSession: 'current' | 'previous', whatType: 'min' | 'max' | 'avg') {
+    getSceneTimerData(
+      whichSession: 'current' | 'previous',
+      whatType: 'min' | 'max' | 'avg'
+    ) {
       let session: SessionLog;
       if (whichSession === 'current') {
         session = this.CurrentSession;
@@ -159,6 +162,5 @@ export const useSessionStore = defineStore({
           return -1;
       }
     },
-    
   },
 });

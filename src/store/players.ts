@@ -31,6 +31,19 @@ export const usePlayerStore = defineStore({
       const newPlayer = new Player(highestId + 1, name);
       this.players.push(newPlayer);
     },
+    // Add a player with a specific id
+    addPlayerWithId(id: number, name: string) {
+      // Make sure the id is not already in use
+      if (this.players.some((player) => player.id === id)) {
+        // Move the existing player to a new id
+        // TODO : This is gross, could cause a chain of shuffling
+        // TODO : If we implement session stats, this breaks them
+        this.addPlayerWithId(id + 1, name);
+      }
+      // Create a new player with the given id
+      const newPlayer = new Player(id, name);
+      this.players.push(newPlayer);
+    },
     // Remove a player from the list where the id matches the given id
     removePlayer(id: number) {
       this.players = this.players.filter((player) => player.id != id);
@@ -108,5 +121,4 @@ export const usePlayerStore = defineStore({
       return total / count;
     },
   },
-  
 });
