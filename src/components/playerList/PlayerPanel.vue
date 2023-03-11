@@ -1,12 +1,6 @@
-/* Player Panel This is the individual expansion panel for a player. It should
-try to handle all the logic for what we need to do for a single player - just
-keeps it clean to keep it here. TODO LIST: - Delete player button. - Toggle off
-the highlight color buttons if people don't want them. - Add option for a
-countdown timer on each player card. - Countdown timer needs a good way to
-notify. */
 <script setup lang="ts">
 // Import logic bits
-import { defineProps, ref, Ref } from 'vue';
+import { ref, Ref } from 'vue';
 import { Player } from '@/logic/playerManagement';
 // Import our child components
 // Import and assign our state management
@@ -30,6 +24,7 @@ thisPlayer.actionTimer.addEventListener('secondsUpdated', function () {
     .getTimeValues()
     .toString(['minutes', 'seconds']);
 });
+
 
 // Border highlighting options
 let highlightColor: Ref<string | number> = ref('none');
@@ -136,6 +131,27 @@ setInterval(() => {
     )
   );
 }, 1000);
+
+
+// Controls for removing a player - we want to be sure people want to do this.
+const deleteMode = ref(false);
+
+// Make them click the button twice, and time out if they don't do it in 10 seconds
+function deletePlayer() {
+  if (deleteMode.value) {
+    playerStore.removePlayer(thisPlayer.id);
+  } else {
+    deleteMode.value = true;
+    setTimeout(() => {
+      deleteMode.value = false;
+    }, 10000);
+  }
+}
+// Manual cancel delete mode
+function cancelDeletePlayer() {
+  deleteMode.value = false;
+}
+
 </script>
 
 <template>
@@ -208,7 +224,7 @@ setInterval(() => {
           </v-container>
           <v-divider width="75%" thickness="2"></v-divider>
           <v-container
-            class="pa-0 ma-0 d-flex flex-column justify-space-between align-center w-100">
+            class="pa-0 ma-0 mb-1 d-flex flex-column justify-space-between align-center w-100">
             <div class="text-caption">Reminder Highlight Color:</div>
             <v-btn-toggle
               density="compact"
@@ -232,6 +248,31 @@ setInterval(() => {
                 </v-icon>
               </v-btn>
             </v-btn-toggle>
+          </v-container>
+          <v-divider width="75%" thickness="2"></v-divider>
+          <v-container
+            class="pa-0 pt-1 ma-0 mb-1 d-flex justify-space-between align-center w-100">
+            <v-btn
+            size="small"
+            density="comfortable"
+      rounded="pill"
+      color="secondary"
+      :hidden="!deleteMode"
+      @click="cancelDeletePlayer()"
+    >
+    <v-icon left>mdi-trash-can</v-icon>
+      Cancel
+    </v-btn>
+    <v-btn 
+            size="small"
+            density="comfortable"
+      rounded="pill"
+      color="error"
+      @click="deletePlayer()"
+    >
+    <v-icon left>mdi-trash-can</v-icon>
+      Delete Player
+    </v-btn>
           </v-container>
         </v-container>
       </v-expansion-panel-text>

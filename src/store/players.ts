@@ -31,9 +31,9 @@ export const usePlayerStore = defineStore({
       const newPlayer = new Player(highestId + 1, name);
       this.players.push(newPlayer);
     },
-    // Remove a player from the list
+    // Remove a player from the list where the id matches the given id
     removePlayer(id: number) {
-      this.players.splice(id, 1);
+      this.players = this.players.filter((player) => player.id != id);
     },
     // Pause all players
     pauseAll() {
@@ -108,5 +108,5 @@ export const usePlayerStore = defineStore({
       return total / count;
     },
   },
-  persist: true,
+  
 });

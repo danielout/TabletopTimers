@@ -6,7 +6,7 @@ export const useDevStore = defineStore({
   state: () => ({
     devMode: true,
     loadDummyPlayers: true,
-    overrideStartingScreen: true,
+    overrideStartingScreen: false,
     startingAppScreen: 'Themes',
   }),
 });
