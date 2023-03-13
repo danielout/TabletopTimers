@@ -39,10 +39,10 @@ setInterval(() => {
   } else {
     sortedPlayers.value = playerStore.players;
   }
-}, 1000);
+}, 200);
 
 // How we know if the player panel is expanded or collapsed
-let playerPanelState: Ref<boolean> = ref(false);
+let playerPanelState: Ref<boolean> = ref(true);
 
 // Toggle the height of the addPlayerPanel to 0 or 100px based on playerPanelState
 function toggleAddPlayerPanel() {
@@ -58,7 +58,7 @@ function toggleAddPlayerPanel() {
 <template>
   <v-container
     class="d-flex flex-column justify-start px-0 mt-0 pt-1 h-100 align-self-start">
-    <v-sheet id="addPlayerPanel">
+    <v-sheet id="addPlayerPanel" class="expand">
       <AddPlayer></AddPlayer>
       <PlayerSaveLoad></PlayerSaveLoad>
     </v-sheet>

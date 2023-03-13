@@ -30,6 +30,14 @@ export function blendColors(
   color2: string,
   interpolationValue: number
 ): string {
+  // If our interpolation value is 0, return the first color
+  if (interpolationValue === 0) {
+    return color1;
+  }
+  // If our interpolation value is 1, return the second color
+  if (interpolationValue === 1) {
+    return color2;
+  }
   const hex1 = color1.slice(1); // remove the '#' symbol
   const hex2 = color2.slice(1); // remove the '#' symbol
   // convert hex colors to RGB values

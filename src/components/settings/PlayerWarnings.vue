@@ -91,7 +91,7 @@ const settingsStore = useSettingsStore();
       </v-container> -->
       <v-container
         class="d-flex flex-row justify-space-between align-center ma-0 pa-0">
-        <span class="w-100">Enable Warning Intensity</span>
+        <span class="w-100">Enable Warning Color Scaling</span>
         <v-switch
           hide-details="auto"
           color="secondary"

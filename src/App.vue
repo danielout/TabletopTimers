@@ -61,7 +61,7 @@ watch(
   <v-app>
     <!-- Top Application Bar -->
     <v-app-bar :elevation="2" density="compact">
-      <v-app-bar-title>Tabletop Tracker</v-app-bar-title>
+      <v-app-bar-title>Tabletop Timers</v-app-bar-title>
       <template v-slot:append>
         <v-menu transition="slide-x-reverse-transition">
           <template v-slot:activator="{ props }">
